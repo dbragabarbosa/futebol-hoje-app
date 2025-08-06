@@ -9,9 +9,19 @@ import SwiftUI
 
 struct GamesListView: View
 {
+    @StateObject var viewModel = GamesViewModel()
+
     var body: some View
     {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        List(viewModel.games)
+        { game in
+            
+            GameRowView(game: game)
+        }
+        .onAppear
+        {
+            viewModel.fetchGames()
+        }
     }
 }
 
