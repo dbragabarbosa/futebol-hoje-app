@@ -27,6 +27,7 @@
 		ED0619EE2E3AD241007334C9 /* FutebolHoje.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FutebolHoje.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED0619FB2E3AD248007334C9 /* FutebolHojeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FutebolHojeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED061A052E3AD248007334C9 /* FutebolHojeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FutebolHojeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		EDA4D66D2E42D357008802B3 /* GamesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamesViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -75,6 +76,7 @@
 		ED0619E52E3AD240007334C9 = {
 			isa = PBXGroup;
 			children = (
+				EDA4D66C2E42D338008802B3 /* Models */,
 				ED0619F02E3AD241007334C9 /* FutebolHoje */,
 				ED0619FE2E3AD248007334C9 /* FutebolHojeTests */,
 				ED061A082E3AD248007334C9 /* FutebolHojeUITests */,
@@ -90,6 +92,14 @@
 				ED061A052E3AD248007334C9 /* FutebolHojeUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		EDA4D66C2E42D338008802B3 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				EDA4D66D2E42D357008802B3 /* GamesViewModel.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
