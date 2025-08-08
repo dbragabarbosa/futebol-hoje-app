@@ -8,10 +8,14 @@
 import SwiftUI
 
 @main
-struct FutebolHojeApp: App {
-    var body: some Scene {
-        WindowGroup {
-            ContentView()
+struct FutebolHojeApp: App
+{
+    var body: some Scene
+    {
+        WindowGroup
+        {
+//            ContentView()
+            GamesView()
         }
     }
 }

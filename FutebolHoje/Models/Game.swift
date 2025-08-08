@@ -7,11 +7,11 @@
 
 import Foundation
 
-struct Game: Identifiable, Decodable
-{
-    let id: Int
-    let homeTeam: String
-    let awayTeam: String
-    let date: Date
-    let broadcaster: String
-}
+//struct Game: Identifiable
+//{
+//    let id = UUID()
+//    let homeTeam: String
+//    let awayTeam: String
+//    let time: String
+//    let channel: String
+//}

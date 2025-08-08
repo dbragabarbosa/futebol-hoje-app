@@ -9,19 +9,21 @@ import SwiftUI
 
 struct GamesListView: View
 {
-    @StateObject var viewModel = GamesViewModel()
+//    @StateObject var viewModel = GamesViewModel()
 
     var body: some View
     {
-        List(viewModel.games)
-        { game in
-            
-            GameRowView(game: game)
-        }
-        .onAppear
-        {
-            viewModel.fetchGames()
-        }
+        Text("Hello, World!")
+        
+//        List(viewModel.games)
+//        { game in
+//            
+//            GameRowView(game: game)
+//        }
+//        .onAppear
+//        {
+//            viewModel.fetchGames()
+//        }
     }
 }
 

@@ -11,6 +11,6 @@ class APIService
 {
     static func fetchGames(completion: @escaping ([Game]) -> Void)
     {
-        // 
+        //
     }
 }
