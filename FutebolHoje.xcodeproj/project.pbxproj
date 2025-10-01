@@ -6,6 +6,11 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		EDCC42AF2E8CD6480050C005 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = EDCC42AE2E8CD6480050C005 /* FirebaseAnalytics */; };
+		EDCC42B12E8CD6480050C005 /* FirebaseAnalyticsCore in Frameworks */ = {isa = PBXBuildFile; productRef = EDCC42B02E8CD6480050C005 /* FirebaseAnalyticsCore */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		ED0619FC2E3AD248007334C9 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -67,6 +72,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EDCC42AF2E8CD6480050C005 /* FirebaseAnalytics in Frameworks */,
+				EDCC42B12E8CD6480050C005 /* FirebaseAnalyticsCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -127,6 +134,8 @@
 			);
 			name = FutebolHoje;
 			packageProductDependencies = (
+				EDCC42AE2E8CD6480050C005 /* FirebaseAnalytics */,
+				EDCC42B02E8CD6480050C005 /* FirebaseAnalyticsCore */,
 			);
 			productName = FutebolHoje;
 			productReference = ED0619EE2E3AD241007334C9 /* FutebolHoje.app */;
@@ -212,6 +221,9 @@
 			);
 			mainGroup = ED0619E52E3AD240007334C9;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				EDCC42AD2E8CD6480050C005 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = ED0619EF2E3AD241007334C9 /* Products */;
 			projectDirPath = "";
@@ -599,6 +611,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		EDCC42AD2E8CD6480050C005 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.3.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		EDCC42AE2E8CD6480050C005 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EDCC42AD2E8CD6480050C005 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		EDCC42B02E8CD6480050C005 /* FirebaseAnalyticsCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EDCC42AD2E8CD6480050C005 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalyticsCore;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = ED0619E62E3AD241007334C9 /* Project object */;
 }
