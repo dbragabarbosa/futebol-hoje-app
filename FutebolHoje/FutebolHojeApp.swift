@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Firebase
 import FirebaseCore
 
 class AppDelegate: NSObject, UIApplicationDelegate
@@ -28,7 +27,11 @@ struct FutebolHojeApp: App
     {
         WindowGroup
         {
-            GamesView()
+            NavigationView
+            {
+//                ContentView()
+                GamesView()
+            }
         }
     }
 }

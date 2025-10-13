@@ -7,13 +7,13 @@
 
 import SwiftUI
 
-struct GamesListView: View
-{
+//struct GamesListView: View
+//{
 //    @StateObject var viewModel = GamesViewModel()
 
-    var body: some View
-    {
-        Text("Hello, World!")
+//    var body: some View
+//    {
+//        Text("Hello, World!")
         
 //        List(viewModel.games)
 //        { game in
@@ -24,6 +24,26 @@ struct GamesListView: View
 //        {
 //            viewModel.fetchGames()
 //        }
+//    }
+//}
+
+struct GamesListView: View
+{
+    var body: some View
+    {
+        // MARK: - Lista de jogos
+        ScrollView
+        {
+            VStack(spacing: 12)
+            {
+                ForEach(0..<5, id: \.self)
+                { _ in
+                    
+                    GameCardView()
+                }
+            }
+            .padding()
+        }
     }
 }
 

@@ -6,12 +6,13 @@
 //
 
 import Foundation
+import FirebaseFirestore
 
-//struct Game: Identifiable
-//{
-//    let id = UUID()
-//    let homeTeam: String
-//    let awayTeam: String
-//    let time: String
-//    let channel: String
-//}
+struct Game: Identifiable, Codable
+{
+    @DocumentID var id: String?
+    let homeTeam: String
+    let awayTeam: String
+    let date: Date
+    let broadcaster: String
+}
