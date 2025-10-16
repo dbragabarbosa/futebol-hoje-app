@@ -12,21 +12,33 @@ struct DatePickerView: View
 {
     var body: some View
     {
-        // MARK: - Seletor de data (Ontem, Hoje, Amanhã)
         HStack
         {
-            Button("Ontem") { /* ação futura */ }
             Spacer()
-            Button("Domingo, 12 de outubro") { /* ação futura */ }
-                .fontWeight(.semibold)
+            
+            Text(todayString)
+                .font(.headline)
+                .foregroundColor(.accentColor)
+            
             Spacer()
-            Button("Amanhã") { /* ação futura */ }
         }
         .padding(.horizontal)
         .padding(.vertical, 8)
-        .background(Color(.systemGray6))
+        .background(.ultraThinMaterial)
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .padding(.horizontal)
+    }
+    
+    private var todayString: String
+    {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "EEEE, d 'de' MMMM"
+        formatter.locale = Locale(identifier: "pt_BR")
+        return formatter.string(from: Date()).capitalized
     }
 }
+
+
 
 #Preview
 {
