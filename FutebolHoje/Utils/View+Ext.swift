@@ -5,6 +5,9 @@
 //  Created by Daniel Braga Barbosa on 20/10/25.
 //
 
+import Foundation
+import SwiftUI
+
 /// Blur Fade In/Out
 extension View
 {

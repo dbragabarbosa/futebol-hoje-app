@@ -10,38 +10,43 @@ import SwiftUI
 
 struct TabsView: View
 {
+    @State var selectedTab = "Jogos"
+    
     var body: some View
     {
-        @State var selectedTab = 0 // 0 = Jogos, 1 = Notificações
-        
-        // MARK: - Barra inferior (Tabs)
         HStack
         {
-            Button(action: { selectedTab = 0 })
+            Spacer()
+            
+            Button(action: { selectedTab = "Jogos" })
             {
-                VStack
+                VStack(spacing: 4)
                 {
                     Image(systemName: "sportscourt.fill")
+                        .font(.system(size: 20))
                     Text("Jogos")
+                        .font(.system(size: 12))
                 }
             }
-            .foregroundColor(selectedTab == 0 ? .blue : .gray)
+            .foregroundColor(selectedTab == "Jogos" ? .blue : .gray)
             
             Spacer()
             
-            Button(action: { selectedTab = 1 })
+            Button(action: { selectedTab = "Notificações" })
             {
-                VStack
+                VStack(spacing: 4)
                 {
                     Image(systemName: "bell.fill")
+                        .font(.system(size: 20))
                     Text("Notificações")
+                        .font(.system(size: 12))
                 }
             }
-            .foregroundColor(selectedTab == 1 ? .blue : .gray)
+            .foregroundColor(selectedTab == "Notificações" ? .blue : .gray)
             
             Spacer()
         }
-        .padding()
+        .padding(.vertical, 10)
         .background(Color(.systemGray6))
     }
 }
