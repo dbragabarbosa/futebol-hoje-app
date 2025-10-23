@@ -11,8 +11,14 @@ import FirebaseFirestore
 struct Game: Identifiable, Codable
 {
     @DocumentID var id: String?
-    let homeTeam: String
-    let awayTeam: String
-    let date: Date
-    let broadcaster: String
+    let homeTeam: String?
+    let awayTeam: String?
+    let date: Date?
+    let hour: String?
+    let broadcaster: String?
+    let competition: String?
+    let stage: String?
+    let homeTeamColor: String?
+    let awayTeamColor: String?
+    let broadcasters: [String]?
 }
