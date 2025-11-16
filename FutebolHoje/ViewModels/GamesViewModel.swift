@@ -17,6 +17,8 @@ class GamesViewModel: ObservableObject
 {
     @Published var games: [Game] = []
     @Published var todayGames: [Game] = []
+    @Published var isLoading: Bool = false
+    @Published var errorMessage: String? = nil
     
     private let db = Firestore.firestore()
     
@@ -27,12 +29,20 @@ class GamesViewModel: ObservableObject
     
     private func loadGames()
     {
+        isLoading = true
+        errorMessage = nil
+        
         db.collection("games").addSnapshotListener
-        { snapshot, error in
+        { [weak self] snapshot, error in
+            
+            guard let self = self else { return }
+            
+            self.isLoading = false
             
             if let error = error
             {
-                print("Erro ao carregar jogos: \(error.localizedDescription)")
+                self.errorMessage = "Erro ao carregar jogos. Tente novamente."
+                print("❌ Erro ao carregar jogos: \(error.localizedDescription)")
                 return
             }
 
@@ -45,7 +55,7 @@ class GamesViewModel: ObservableObject
                 } ?? []
                 
                 print("✅ Jogos carregados com sucesso: \(games.count)")
-                games.forEach { print("🏟️ \($0.homeTeam) x \($0.awayTeam) em \($0.date)") }
+                games.forEach { print("🏟️ \($0.homeTeam ?? "Time A") x \($0.awayTeam ?? "Time B")") }
                 print("\n")
                 
                 // Filtra apenas os jogos do dia atual
@@ -59,13 +69,23 @@ class GamesViewModel: ObservableObject
                 }
                 
                 print("📅 Jogos de hoje: \(self.todayGames.count)")
-                self.todayGames.forEach { print("🏟️ \($0.homeTeam) x \($0.awayTeam) em \($0.date)") }
+                self.todayGames.forEach { print("🏟️ \($0.homeTeam ?? "Time A") x \($0.awayTeam ?? "Time B")") }
                 print("\n")
+                
+                // Limpa erro se carregou com sucesso
+                self.errorMessage = nil
             }
             catch
             {
-                print("Erro ao decodificar jogos: \(error.localizedDescription)")
+                self.errorMessage = "Erro ao processar dados dos jogos."
+                print("❌ Erro ao decodificar jogos: \(error.localizedDescription)")
             }
         }
+    }
+    
+    /// Função para recarregar os jogos manualmente
+    func refreshGames()
+    {
+        loadGames()
     }
 }

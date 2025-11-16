@@ -12,22 +12,26 @@ struct HeaderView: View
 {
     var body: some View
     {
-        VStack(alignment: .leading)
+        HStack
         {
             Text("Futebol Hoje")
                 .font(.system(.largeTitle, design: .rounded))
                 .fontWeight(.bold)
                 .foregroundColor(.primary)
+            
+            Spacer()
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.horizontal)
-        .padding(.top, 16)
-        .padding(.bottom, 8)
+        .padding(.horizontal, 20)
+        .padding(.top, 20)
+        .padding(.bottom, 12)
         .background(.ultraThinMaterial)
+        .accessibilityLabel("Futebol Hoje")
+        .accessibilityAddTraits(.isHeader)
     }
 }
 
 #Preview
 {
     HeaderView()
+        .previewLayout(.sizeThatFits)
 }

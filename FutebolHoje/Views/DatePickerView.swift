@@ -17,16 +17,28 @@ struct DatePickerView: View
             Spacer()
             
             Text(todayString)
-                .font(.headline)
-                .foregroundColor(.accentColor)
+                .font(.system(.subheadline, design: .rounded))
+                .fontWeight(.medium)
+                .foregroundStyle(.primary)
             
             Spacer()
         }
-        .padding(.horizontal)
-        .padding(.vertical, 8)
-        .background(.ultraThinMaterial)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
-        .padding(.horizontal)
+        .padding(.horizontal, 20)
+        .padding(.vertical, 12)
+        .background
+        {
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .fill(.thinMaterial)
+                .shadow(color: .black.opacity(0.1), radius: 8, x: 0, y: 2)
+        }
+        .overlay
+        {
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .stroke(.white.opacity(0.2), lineWidth: 1)
+        }
+        .padding(.horizontal, 20)
+        .accessibilityLabel("Data de hoje: \(todayString)")
+        .accessibilityAddTraits(.isStaticText)
     }
     
     private var todayString: String
@@ -38,9 +50,9 @@ struct DatePickerView: View
     }
 }
 
-
-
 #Preview
 {
     DatePickerView()
+        .previewLayout(.sizeThatFits)
+        .padding()
 }
