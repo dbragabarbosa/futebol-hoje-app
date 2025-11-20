@@ -61,12 +61,20 @@ class GamesViewModel: ObservableObject
                 // Filtra apenas os jogos do dia atual
                 let calendar = Calendar.current
                 let today = Date()
-                self.todayGames = games.filter
+                let filteredGames = games.filter
                 { game in
                     
                     guard let date = game.date else { return false }
                     return calendar.isDate(date, inSameDayAs: today)
                 }
+                .sorted
+                { lhs, rhs in
+                    guard let leftDate = lhs.date else { return false }
+                    guard let rightDate = rhs.date else { return true }
+                    return leftDate < rightDate
+                }
+                
+                self.todayGames = filteredGames
                 
                 print("📅 Jogos de hoje: \(self.todayGames.count)")
                 self.todayGames.forEach { print("🏟️ \($0.homeTeam ?? "Time A") x \($0.awayTeam ?? "Time B")") }
