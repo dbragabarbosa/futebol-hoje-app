@@ -19,8 +19,9 @@ struct GamesView: View
         VStack(spacing: 0)
         {
             HeaderView()
+            
             DatePickerView()
-            Divider()
+                .padding(.top)
             
             GamesListView(viewModel: viewModel)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
