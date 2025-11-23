@@ -20,6 +20,7 @@ struct GameCardView: View
                 .font(.system(.caption, design: .rounded))
                 .fontWeight(.medium)
                 .foregroundStyle(.secondary)
+                .padding(.bottom, 2)
             
             HStack(spacing: 16)
             {
@@ -29,7 +30,7 @@ struct GameCardView: View
                     .multilineTextAlignment(.center)
                     .frame(maxWidth: .infinity)
                 
-                VStack(spacing: 4)
+                VStack(spacing: 8)
                 {
                     if let date = game.date
                     {
@@ -37,14 +38,6 @@ struct GameCardView: View
                             .font(.system(.title3, design: .rounded))
                             .fontWeight(.bold)
                             .foregroundStyle(.primary)
-                    }
-                    
-                    if let broadcasters = game.broadcasters, !broadcasters.isEmpty
-                    {
-                        Text(broadcasters.joined(separator: ", "))
-                            .font(.system(.caption2, design: .rounded))
-                            .foregroundStyle(.secondary)
-                            .multilineTextAlignment(.center)
                     }
                 }
                 .frame(minWidth: 80)
@@ -54,6 +47,19 @@ struct GameCardView: View
                     .foregroundStyle(.primary)
                     .multilineTextAlignment(.center)
                     .frame(maxWidth: .infinity)
+            }
+            
+            if let broadcasters = game.broadcasters,
+               !broadcasters.isEmpty
+            {
+                let broadcastersText = broadcasters.joined(separator: ", ")
+                
+                Text(broadcastersText)
+                    .font(.system(.subheadline, design: .rounded))
+                    .fontWeight(.semibold)
+                    .foregroundColor(.accentColor)
+                    .multilineTextAlignment(.center)
+                    .padding(.top, 4)
             }
         }
         .padding(16)
@@ -103,10 +109,10 @@ struct GameCardView: View
             homeTeam: "Galo",
             awayTeam: "Palmeiras",
             date: Date(),
-            hour: nil,
-            broadcaster: nil,
+//            hour: nil,
+//            broadcaster: nil,
             competition: "Campeonato Brasileiro",
-            stage: nil,
+//            stage: nil,
             homeTeamColor: nil,
             awayTeamColor: nil,
             broadcasters: ["SporTV", "Premiere"]
@@ -117,10 +123,10 @@ struct GameCardView: View
             homeTeam: "Corinthians",
             awayTeam: "São Paulo",
             date: Calendar.current.date(byAdding: .hour, value: 2, to: Date()),
-            hour: nil,
-            broadcaster: nil,
+//            hour: nil,
+//            broadcaster: nil,
             competition: "Brasileirão Série A",
-            stage: nil,
+//            stage: nil,
             homeTeamColor: nil,
             awayTeamColor: nil,
             broadcasters: ["Globo"]

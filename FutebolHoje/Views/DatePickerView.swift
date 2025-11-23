@@ -29,7 +29,7 @@ struct DatePickerView: View
         {
             RoundedRectangle(cornerRadius: 16, style: .continuous)
                 .fill(.thinMaterial)
-                .shadow(color: .black.opacity(0.1), radius: 8, x: 0, y: 2)
+//                .shadow(color: .black.opacity(0.1), radius: 8, x: 0, y: 2)
         }
         .overlay
         {
@@ -39,6 +39,7 @@ struct DatePickerView: View
         .padding(.horizontal, 20)
         .accessibilityLabel("Data de hoje: \(todayString)")
         .accessibilityAddTraits(.isStaticText)
+        .background(Color(.systemBackground))
     }
     
     private var todayString: String

@@ -10,7 +10,7 @@ import Foundation
 enum CustomTab: String, CaseIterable
 {
     case home = "Home"
-    case notifications = "Notifications"
+//    case notifications = "Notifications"
 //    case settings = "Settings"
     
     var symbol: String
@@ -18,7 +18,7 @@ enum CustomTab: String, CaseIterable
         switch self
         {
             case .home: return "house"
-            case .notifications: return "bell"
+//            case .notifications: return "bell"
 //            case .settings: return "gearshape"
         }
     }
@@ -28,7 +28,7 @@ enum CustomTab: String, CaseIterable
         switch self
         {
             case .home: return "plus"
-            case .notifications: return "tray.full.fill"
+//            case .notifications: return "tray.full.fill"
 //            case .settings: return "cloud.moon.fill"
         }
     }
