@@ -14,10 +14,7 @@ struct Game: Identifiable, Codable
     let homeTeam: String?
     let awayTeam: String?
     let date: Date?
-    let hour: String?
-    let broadcaster: String?
     let competition: String?
-    let stage: String?
     let homeTeamColor: String?
     let awayTeamColor: String?
     let broadcasters: [String]?
