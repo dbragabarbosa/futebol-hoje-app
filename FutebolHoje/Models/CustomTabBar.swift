@@ -16,9 +16,9 @@ struct CustomTabBar<TabItemView: View>: UIViewRepresentable
     @Binding var activeTab: CustomTab
     @ViewBuilder var tabItemView: (CustomTab) -> TabItemView
     
-    func makeCoordinator() -> Coordinator
+    func makeCoordinator() -> CustomTabBarCoordinator
     {
-        Coordinator(parent: self)
+        CustomTabBarCoordinator(activeTab: $activeTab)
     }
     
     func makeUIView(context: Context) -> UISegmentedControl
@@ -27,11 +27,10 @@ struct CustomTabBar<TabItemView: View>: UIViewRepresentable
         let control = UISegmentedControl(items: items)
         control.selectedSegmentIndex = activeTab.index
         
-        // Converting Tab Item View into an image
         for (index, tab) in CustomTab.allCases.enumerated()
         {
             let renderer = ImageRenderer(content: tabItemView(tab))
-            renderer.scale = 2 // 2 is enough
+            renderer.scale = 2
             let image = renderer.uiImage
             
             control.setImage(image, forSegmentAt: index)
@@ -53,30 +52,35 @@ struct CustomTabBar<TabItemView: View>: UIViewRepresentable
             .foregroundColor: UIColor(activeTint)
         ], for: .selected)
         
-        control.addTarget(context.coordinator, action: #selector(context.coordinator.tabSelected(_:)), for: .valueChanged)
+        control.addTarget(context.coordinator, action: #selector(CustomTabBarCoordinator.tabSelected(_:)), for: .valueChanged)
         return control
     }
     
     func updateUIView(_ uiView: UISegmentedControl, context: Context)
     {
-        
+        if uiView.selectedSegmentIndex != activeTab.index
+        {
+            uiView.selectedSegmentIndex = activeTab.index
+        }
     }
     
     func sizeThatFits(_ proposal: ProposedViewSize, uiView: UISegmentedControl, context: Context) -> CGSize?
     {
         return size
     }
+}
+
+final class CustomTabBarCoordinator: NSObject
+{
+    var activeTab: Binding<CustomTab>
     
-    class Coordinator: NSObject
+    init(activeTab: Binding<CustomTab>)
     {
-        var parent: CustomTabBar
-        init(parent: CustomTabBar) {
-            self.parent = parent
-        }
-        
-        @objc func tabSelected(_ control: UISegmentedControl)
-        {
-            parent.activeTab = CustomTab.allCases[control.selectedSegmentIndex]
-        }
+        self.activeTab = activeTab
+    }
+    
+    @objc func tabSelected(_ control: UISegmentedControl)
+    {
+        activeTab.wrappedValue = CustomTab.allCases[control.selectedSegmentIndex]
     }
 }
