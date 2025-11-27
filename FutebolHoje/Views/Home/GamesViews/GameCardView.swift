@@ -109,10 +109,7 @@ struct GameCardView: View
             homeTeam: "Galo",
             awayTeam: "Palmeiras",
             date: Date(),
-//            hour: nil,
-//            broadcaster: nil,
             competition: "Campeonato Brasileiro",
-//            stage: nil,
             homeTeamColor: nil,
             awayTeamColor: nil,
             broadcasters: ["SporTV", "Premiere"]
@@ -123,10 +120,7 @@ struct GameCardView: View
             homeTeam: "Corinthians",
             awayTeam: "São Paulo",
             date: Calendar.current.date(byAdding: .hour, value: 2, to: Date()),
-//            hour: nil,
-//            broadcaster: nil,
             competition: "Brasileirão Série A",
-//            stage: nil,
             homeTeamColor: nil,
             awayTeamColor: nil,
             broadcasters: ["Globo"]

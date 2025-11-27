@@ -13,7 +13,9 @@ struct CustomTabBar<TabItemView: View>: UIViewRepresentable
     var size: CGSize
     var activeTint: Color = .blue
     var barTint: Color = .gray.opacity(0.15)
+    
     @Binding var activeTab: CustomTab
+    
     @ViewBuilder var tabItemView: (CustomTab) -> TabItemView
     
     func makeCoordinator() -> CustomTabBarCoordinator
@@ -42,7 +44,7 @@ struct CustomTabBar<TabItemView: View>: UIViewRepresentable
             {
                 if subview is UIImageView && subview != control.subviews.last
                 {
-                    subview.alpha = 0 // It's a background Image View
+                    subview.alpha = 0
                 }
             }
         }
@@ -67,20 +69,5 @@ struct CustomTabBar<TabItemView: View>: UIViewRepresentable
     func sizeThatFits(_ proposal: ProposedViewSize, uiView: UISegmentedControl, context: Context) -> CGSize?
     {
         return size
-    }
-}
-
-final class CustomTabBarCoordinator: NSObject
-{
-    var activeTab: Binding<CustomTab>
-    
-    init(activeTab: Binding<CustomTab>)
-    {
-        self.activeTab = activeTab
-    }
-    
-    @objc func tabSelected(_ control: UISegmentedControl)
-    {
-        activeTab.wrappedValue = CustomTab.allCases[control.selectedSegmentIndex]
     }
 }

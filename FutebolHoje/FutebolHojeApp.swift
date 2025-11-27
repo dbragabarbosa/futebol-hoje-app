@@ -30,7 +30,7 @@ struct FutebolHojeApp: App
             NavigationView
             {
 //                ContentView()
-                GamesView()
+                HomeView()
             }
         }
     }

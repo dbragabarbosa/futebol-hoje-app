@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-struct GamesView: View
+struct HomeView: View
 {
     @StateObject private var viewModel = GamesViewModel()
     
@@ -18,8 +18,6 @@ struct GamesView: View
     {
         VStack(spacing: 0)
         {
-            HeaderView()
-            
             DatePickerView()
                 .padding(.top)
             
@@ -29,8 +27,8 @@ struct GamesView: View
             
             Divider()
             
-//            TabsView()
             CustomTabBarView(activeTab: $activeTab)
+                .padding(.top, 8)
         }
         .background(Color(.systemBackground))
     }
@@ -38,5 +36,5 @@ struct GamesView: View
 
 #Preview
 {
-    GamesView()
+    HomeView()
 }

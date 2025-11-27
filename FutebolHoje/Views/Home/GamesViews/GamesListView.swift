@@ -44,7 +44,6 @@ struct GamesListView: View
         }
     }
     
-    // MARK: - Views
     
     private var loadingView: some View
     {
@@ -128,16 +127,14 @@ struct GamesListView: View
             GameCardView(game: game)
         }
     }
-    
-    // MARK: - Actions
+
     
     @MainActor
     private func refreshGames() async
     {
         viewModel.refreshGames()
-        
-        // Aguarda um pouco para dar feedback visual
-        try? await Task.sleep(nanoseconds: 500_000_000) // 0.5 segundos
+
+        try? await Task.sleep(nanoseconds: 500_000_000)
     }
 }
 
