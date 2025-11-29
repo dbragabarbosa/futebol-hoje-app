@@ -18,12 +18,21 @@ struct HomeView: View
     {
         VStack(spacing: 0)
         {
-            DatePickerView()
-                .padding(.top)
-            
-            GamesListView(viewModel: viewModel)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(Color(.systemBackground))
+            switch activeTab
+            {
+                case .home:
+                    VStack(spacing: 0)
+                    {
+                        DatePickerView()
+                            .padding(.top)
+                        
+                        GamesListView(viewModel: viewModel)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    
+                case .review:
+                    ReviewView()
+            }
             
             Divider()
             
