@@ -10,13 +10,15 @@ import SwiftUI
 
 struct DatePickerView: View
 {
+    @StateObject private var viewModel = DatePickerViewModel()
+    
     var body: some View
     {
         HStack
         {
             Spacer()
             
-            Text(todayString)
+            Text(viewModel.dateString)
                 .font(.system(.subheadline, design: .rounded))
                 .fontWeight(.medium)
                 .foregroundStyle(.primary)
@@ -37,23 +39,14 @@ struct DatePickerView: View
                 .stroke(.white.opacity(0.2), lineWidth: 1)
         }
         .padding(.horizontal, 20)
-        .accessibilityLabel("Data de hoje: \(todayString)")
+        .accessibilityLabel("Data de hoje: \(viewModel.dateString)")
         .accessibilityAddTraits(.isStaticText)
         .background(Color(.systemBackground))
-    }
-    
-    private var todayString: String
-    {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "EEEE, d 'de' MMMM"
-        formatter.locale = Locale(identifier: "pt_BR")
-        return formatter.string(from: Date()).capitalized
     }
 }
 
 #Preview
 {
     DatePickerView()
-        .previewLayout(.sizeThatFits)
         .padding()
 }
