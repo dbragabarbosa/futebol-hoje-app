@@ -37,7 +37,7 @@ struct HomeView: View
             Divider()
             
             CustomTabBarView(activeTab: $activeTab)
-                .padding(.top, 8)
+                .padding(.top, 4)
         }
         .background(Color(.systemBackground))
     }
