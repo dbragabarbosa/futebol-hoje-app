@@ -27,11 +27,12 @@ struct HomeView: View
                             .padding(.top)
                         
                         GamesListView(viewModel: viewModel)
+                            .padding(.top, 4)
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     
-                case .review:
-                    ReviewView()
+                case .feedback:
+                    FeedbackView()
             }
             
             Divider()
