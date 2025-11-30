@@ -142,7 +142,7 @@ struct GamesListView: View
 {
     VStack(spacing: 0)
     {
-        HeaderView()
+//        HeaderView()
         DatePickerView()
         Divider()
         

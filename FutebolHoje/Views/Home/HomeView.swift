@@ -10,9 +10,8 @@ import SwiftUI
 
 struct HomeView: View
 {
-    @StateObject private var viewModel = GamesViewModel()
-    
     @State private var activeTab: CustomTab = .home
+    @State private var selectedSport: SportType = .futebol
     
     var body: some View
     {
@@ -23,11 +22,20 @@ struct HomeView: View
                 case .home:
                     VStack(spacing: 0)
                     {
-                        DatePickerView()
-                            .padding(.top)
+                        SportSelectionHeader(selectedSport: $selectedSport)
+                            .padding(.top, 8)
                         
-                        GamesListView(viewModel: viewModel)
-                            .padding(.top, 4)
+                        switch selectedSport
+                        {
+                            case .futebol:
+                                FutebolView()
+                                
+                            case .nfl:
+                                NFLView()
+                                
+                            case .nba:
+                                NBAView()
+                        }
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     

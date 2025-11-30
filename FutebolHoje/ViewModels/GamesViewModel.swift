@@ -80,7 +80,6 @@ class GamesViewModel: ObservableObject
                 self.todayGames.forEach { print("🏟️ \($0.homeTeam ?? "Time A") x \($0.awayTeam ?? "Time B")") }
                 print("\n")
                 
-                // Limpa erro se carregou com sucesso
                 self.errorMessage = nil
             }
             catch
@@ -91,7 +90,6 @@ class GamesViewModel: ObservableObject
         }
     }
     
-    /// Função para recarregar os jogos manualmente
     func refreshGames()
     {
         loadGames()
