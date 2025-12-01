@@ -33,5 +33,4 @@ struct HeaderView: View
 #Preview
 {
     HeaderView()
-        .previewLayout(.sizeThatFits)
 }

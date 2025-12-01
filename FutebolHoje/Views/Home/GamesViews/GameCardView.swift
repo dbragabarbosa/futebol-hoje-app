@@ -14,89 +14,126 @@ struct GameCardView: View
     
     var body: some View
     {
-        VStack(alignment: .center, spacing: 12)
+        VStack(alignment: .center, spacing: 6)
         {
-            Text(game.competition ?? "Campeonato Brasileiro")
+            Text(game.competition?.uppercased() ?? "CAMPEONATO")
                 .font(.system(.caption, design: .rounded))
-                .fontWeight(.medium)
+                .fontWeight(.bold)
                 .foregroundStyle(.secondary)
-                .padding(.bottom, 2)
+                .tracking(1)
+                .multilineTextAlignment(.center)
             
-            HStack(spacing: 16)
+            HStack(spacing: 0)
             {
                 Text(game.homeTeam ?? "Time A")
                     .font(.system(.headline, design: .rounded))
+                    .fontWeight(.bold)
                     .foregroundStyle(.primary)
-                    .multilineTextAlignment(.center)
-                    .frame(maxWidth: .infinity)
-                
-                VStack(spacing: 8)
+                    .multilineTextAlignment(.leading)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .fixedSize(horizontal: false, vertical: true)
+
+                VStack
                 {
                     if let date = game.date
                     {
                         Text(date.formatted(date: .omitted, time: .shortened))
-                            .font(.system(.title3, design: .rounded))
+                            .font(.system(.body, design: .rounded))
                             .fontWeight(.bold)
                             .foregroundStyle(.primary)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 6)
+//                            .background(Color(.tertiarySystemGroupedBackground))
+//                            .clipShape(Capsule())
+                    }
+                    else
+                    {
+                        Text("VS")
+                            .font(.system(.subheadline, design: .rounded))
+                            .fontWeight(.bold)
+                            .foregroundStyle(.secondary)
                     }
                 }
-                .frame(minWidth: 80)
+                .frame(width: 80)
                 
                 Text(game.awayTeam ?? "Time B")
                     .font(.system(.headline, design: .rounded))
+                    .fontWeight(.bold)
                     .foregroundStyle(.primary)
-                    .multilineTextAlignment(.center)
-                    .frame(maxWidth: .infinity)
+                    .multilineTextAlignment(.trailing)
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+                    .fixedSize(horizontal: false, vertical: true)
             }
             
-            if let broadcasters = game.broadcasters,
-               !broadcasters.isEmpty
+            if let broadcasters = game.broadcasters, !broadcasters.isEmpty
             {
-                let broadcastersText = broadcasters.joined(separator: ", ")
-                
-                Text(broadcastersText)
-                    .font(.system(.subheadline, design: .rounded))
-                    .fontWeight(.semibold)
-                    .foregroundColor(.accentColor)
-                    .multilineTextAlignment(.center)
-                    .padding(.top, 4)
+                ViewThatFits(in: .horizontal)
+                {
+                    HStack(spacing: 8)
+                    {
+                        broadcasterPills(broadcasters)
+                    }
+
+                    ScrollView(.horizontal, showsIndicators: false)
+                    {
+                        HStack(spacing: 8)
+                        {
+                            broadcasterPills(broadcasters)
+                        }
+                    }
+                }
             }
         }
         .padding(16)
-        .background
-        {
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .fill(.regularMaterial)
-                .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 4)
-        }
-        .overlay
-        {
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .stroke(.white.opacity(0.2), lineWidth: 1)
-        }
+//        .background
+//        {
+//            RoundedRectangle(cornerRadius: 16, style: .continuous)
+//                .fill(.regularMaterial)
+//                .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 4)
+//        }
+//        .overlay
+//        {
+//            RoundedRectangle(cornerRadius: 16, style: .continuous)
+//                .stroke(.white.opacity(0.2), lineWidth: 1)
+//        }
+        .background(Color(.secondarySystemGroupedBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+        .shadow(color: Color.black.opacity(0.16), radius: 12, x: 0, y: 6)
         .accessibilityElement(children: .combine)
         .accessibilityLabel(accessibilityLabel)
+    }
+    
+    private func broadcasterPills(_ broadcasters: [String]) -> some View
+    {
+        ForEach(broadcasters, id: \.self)
+        { broadcaster in
+            Text(broadcaster.uppercased())
+                .font(.system(size: 10, weight: .bold))
+                .foregroundStyle(.blue)
+                .padding(.horizontal, 10)
+                .padding(.vertical, 4)
+                .background(Color.blue.opacity(0.1))
+                .clipShape(Capsule())
+                .overlay(
+                    Capsule()
+                        .stroke(Color.blue.opacity(0.2), lineWidth: 1)
+                )
+        }
     }
     
     private var accessibilityLabel: String
     {
         let home = game.homeTeam ?? "Time A"
         let away = game.awayTeam ?? "Time B"
-        let competition = game.competition ?? "Campeonato Brasileiro"
+        let competition = game.competition ?? "Campeonato"
+
         var timeString = ""
-        
         if let date = game.date
         {
             timeString = " às \(date.formatted(date: .omitted, time: .shortened))"
         }
         
-        var broadcastersString = ""
-        if let broadcasters = game.broadcasters, !broadcasters.isEmpty
-        {
-            broadcastersString = " transmitido por \(broadcasters.joined(separator: " e "))"
-        }
-        
-        return "\(home) contra \(away)\(timeString), \(competition)\(broadcastersString)"
+        return "\(competition). \(home) contra \(away)\(timeString)"
     }
 }
 
@@ -112,7 +149,7 @@ struct GameCardView: View
             competition: "Campeonato Brasileiro",
             homeTeamColor: nil,
             awayTeamColor: nil,
-            broadcasters: ["SporTV", "Premiere"],
+            broadcasters: ["SporTV", "Premiere", "YouTube (ESPN Brasil)", "YouTube (CazéTV)"],
             region: "Brasil"
         ))
         
