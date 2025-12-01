@@ -18,4 +18,5 @@ struct Game: Identifiable, Codable
     let homeTeamColor: String?
     let awayTeamColor: String?
     let broadcasters: [String]?
+    let region: String?
 }

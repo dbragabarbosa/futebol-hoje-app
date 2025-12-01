@@ -18,10 +18,48 @@ struct FutebolView: View
             DatePickerView()
                 .padding(.top, 4)
             
-            GamesListView(viewModel: viewModel)
-                .padding(.top, 4)
+            HStack(spacing: 12)
+            {
+                FilterButtonByRegionView(title: "🇧🇷 Brasil", isSelected: viewModel.filterRegions.contains("Brasil"))
+                {
+                    toggleRegion("Brasil")
+                }
+                
+                FilterButtonByRegionView(title: "🇪🇺 Europa", isSelected: viewModel.filterRegions.contains("Europa"))
+                {
+                    toggleRegion("Europa")
+                }
+                
+                Spacer()
+            }
+            .padding(.top, 12)
+            .padding(.leading)
+            
+            if viewModel.filterRegions.isEmpty
+            {
+                NoRegionSelectedView()
+            }
+            else
+            {
+                GamesListView(viewModel: viewModel)
+                    .padding(.top, 4)
+            }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+    
+    private func toggleRegion(_ region: String)
+    {
+        var newRegions = viewModel.filterRegions
+        if newRegions.contains(region)
+        {
+            newRegions.remove(region)
+        }
+        else
+        {
+            newRegions.insert(region)
+        }
+        viewModel.updateFilter(regions: newRegions)
     }
 }
 

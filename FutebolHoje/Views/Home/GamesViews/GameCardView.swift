@@ -112,7 +112,8 @@ struct GameCardView: View
             competition: "Campeonato Brasileiro",
             homeTeamColor: nil,
             awayTeamColor: nil,
-            broadcasters: ["SporTV", "Premiere"]
+            broadcasters: ["SporTV", "Premiere"],
+            region: "Brasil"
         ))
         
         GameCardView(game: Game(
@@ -123,7 +124,8 @@ struct GameCardView: View
             competition: "Brasileirão Série A",
             homeTeamColor: nil,
             awayTeamColor: nil,
-            broadcasters: ["Globo"]
+            broadcasters: ["Globo"],
+            region: "Europa"
         ))
     }
     .padding()

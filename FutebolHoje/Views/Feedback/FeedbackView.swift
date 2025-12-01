@@ -24,7 +24,7 @@ struct FeedbackView: View
                         HStack
                         {
                             Image(systemName: "heart.circle.fill")
-                                .font(.system(size: 40))
+                                .font(.system(size: 30))
                                 .foregroundColor(.pink)
                             
                             Text("Queremos ouvir você!")

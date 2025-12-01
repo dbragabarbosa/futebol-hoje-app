@@ -19,8 +19,10 @@ class GamesViewModel: ObservableObject
     @Published var todayGames: [Game] = []
     @Published var isLoading: Bool = false
     @Published var errorMessage: String? = nil
+    @Published var filterRegions: Set<String> = ["Brasil"]
     
     private let db = Firestore.firestore()
+    private var allGames: [Game] = []
     
     init()
     {
@@ -48,39 +50,13 @@ class GamesViewModel: ObservableObject
 
             do
             {
-                let games = try snapshot?.documents.compactMap
+                self.allGames = try snapshot?.documents.compactMap
                 { doc in
-                    
                     try doc.data(as: Game.self)
                 } ?? []
                 
-                print("✅ Jogos carregados com sucesso: \(games.count)")
-                games.forEach { print("🏟️ \($0.homeTeam ?? "Time A") x \($0.awayTeam ?? "Time B")") }
-                print("\n")
-                
-                // Filtra apenas os jogos do dia atual
-                let calendar = Calendar.current
-                let today = Date()
-                let filteredGames = games.filter
-                { game in
-                    
-                    guard let date = game.date else { return false }
-                    return calendar.isDate(date, inSameDayAs: today)
-                }
-                .sorted
-                { lhs, rhs in
-                    guard let leftDate = lhs.date else { return false }
-                    guard let rightDate = rhs.date else { return true }
-                    return leftDate < rightDate
-                }
-                
-                self.todayGames = filteredGames
-                
-                print("📅 Jogos de hoje: \(self.todayGames.count)")
-                self.todayGames.forEach { print("🏟️ \($0.homeTeam ?? "Time A") x \($0.awayTeam ?? "Time B")") }
-                print("\n")
-                
-                self.errorMessage = nil
+                print("✅ Jogos carregados com sucesso: \(self.allGames.count)")
+                self.applyFilters()
             }
             catch
             {
@@ -88,6 +64,69 @@ class GamesViewModel: ObservableObject
                 print("❌ Erro ao decodificar jogos: \(error.localizedDescription)")
             }
         }
+    }
+    
+    func updateFilter(regions: Set<String>)
+    {
+        self.filterRegions = regions
+        applyFilters()
+    }
+    
+    private func applyFilters()
+    {
+        let calendar = Calendar.current
+        let today = Date()
+        
+        let filteredGames = allGames.filter
+        { game in
+            
+            guard let date = game.date else { return false }
+            guard calendar.isDate(date, inSameDayAs: today) else { return false }
+            
+            if filterRegions.isEmpty { return false }
+            
+            let normalizedRegion = determineRegion(for: game)
+            return filterRegions.contains(normalizedRegion)
+        }
+        .sorted
+        { lhs, rhs in
+            guard let leftDate = lhs.date else { return false }
+            guard let rightDate = rhs.date else { return true }
+            return leftDate < rightDate
+        }
+        
+        self.todayGames = filteredGames
+        self.errorMessage = nil
+    }
+    
+    private func determineRegion(for game: Game) -> String
+    {
+        let europeanCompetitions = [
+            "UEFA Champions League",
+            "UEFA Europa League",
+            "UEFA Conference League",
+            "Campeonato Alemão",
+            "Campeonato Espanhol",
+            "Campeonato Francês",
+            "Campeonato Inglês",
+            "Campeonato Italiano",
+            "Campeonato Português"
+        ]
+        
+        let competition = game.competition ?? ""
+        
+        if europeanCompetitions.contains(where: { competition.contains($0) })
+        {
+            return "Europa"
+        }
+        
+        let region = game.region ?? "Brasil"
+        if region == "UE" || region == "Europa"
+        {
+            return "Europa"
+        }
+        
+        return "Brasil"
     }
     
     func refreshGames()
