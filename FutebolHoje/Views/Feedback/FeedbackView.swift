@@ -17,7 +17,7 @@ struct FeedbackView: View
         {
             ScrollView
             {
-                VStack(spacing: 24)
+                VStack(spacing: 8)
                 {
                     VStack(spacing: 8)
                     {
@@ -39,16 +39,17 @@ struct FeedbackView: View
                             .multilineTextAlignment(.center)
                             .padding(.horizontal, 20)
                     }
-                    .padding(.top, 20)
-                    .padding(.bottom, 10)
+                    .padding(.top, 16)
+                    .padding(.bottom, 8)
 
-                    VStack(spacing: 16)
+                    VStack(spacing: 12)
                     {
                         ShareAppView()
                         RateAppView(viewModel: viewModel)
                         ContactDeveloperView(viewModel: viewModel)
                     }
                     .padding(.horizontal)
+                    .padding(.bottom, 16)
                 }
             }
             .navigationBarHidden(true)
