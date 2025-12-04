@@ -45,8 +45,16 @@ struct HomeView: View
             
             Divider()
             
-            CustomTabBarView(activeTab: $activeTab)
-                .padding(.top, 4)
+            if #available(iOS 26, *)
+            {
+                CustomTabBarView(activeTab: $activeTab)
+                    .padding(.top, 4)
+            }
+            else
+            {
+                TabBarForLoweriOSVersions(activeTab: $activeTab)
+            }
+            
         }
         .background(Color(.systemBackground))
     }

@@ -23,7 +23,7 @@ enum CustomTab: String, CaseIterable
     {
         switch self
         {
-            case .home: return "house"
+            case .home: return "house.fill"
             case .feedback: return "bubble.left.and.bubble.right.fill"
 //            case .notifications: return "bell"
 //            case .settings: return "gearshape"
@@ -39,7 +39,7 @@ enum CustomTab: String, CaseIterable
     {
         switch self
         {
-            case .home: return "plus"
+            case .home: return "house"
             case .feedback: return "bubble.left.and.bubble.right"
 //            case .notifications: return "tray.full.fill"
 //            case .settings: return "cloud.moon.fill"
