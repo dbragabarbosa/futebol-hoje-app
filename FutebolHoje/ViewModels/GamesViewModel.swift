@@ -110,7 +110,14 @@ class GamesViewModel: ObservableObject
             "Campeonato Francês",
             "Campeonato Inglês",
             "Campeonato Italiano",
-            "Campeonato Português"
+            "Campeonato Português",
+            "Copa da Inglaterra",
+            "Copa da Liga Inglesa",
+            "Copa do Rei",
+            "Copa da Itália",
+            "Copa da Alemanha",
+            "Copa da França",
+            "Taça de Portugal"
         ]
         
         let competition = game.competition ?? ""
