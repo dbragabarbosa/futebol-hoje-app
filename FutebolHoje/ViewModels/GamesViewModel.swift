@@ -20,13 +20,28 @@ class GamesViewModel: ObservableObject
     @Published var isLoading: Bool = false
     @Published var errorMessage: String? = nil
     @Published var filterRegions: Set<String> = ["Brasil"]
+    @Published var isConnected: Bool = true
     
     private let db = Firestore.firestore()
+    private let networkMonitor = NetworkMonitor()
     private var allGames: [Game] = []
+    
+    private var cancellables = Set<AnyCancellable>()
     
     init()
     {
+        setupNetworkMonitoring()
         loadGames()
+    }
+    
+    private func setupNetworkMonitoring()
+    {
+        networkMonitor.$isConnected
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] connected in
+                self?.isConnected = connected
+            }
+            .store(in: &cancellables)
     }
     
     private func loadGames()
