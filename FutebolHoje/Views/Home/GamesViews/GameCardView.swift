@@ -32,6 +32,8 @@ struct GameCardView: View
                     .multilineTextAlignment(.leading)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .fixedSize(horizontal: false, vertical: true)
+                    .lineLimit(3)
+                    .minimumScaleFactor(0.1)
 
                 VStack
                 {
@@ -41,8 +43,10 @@ struct GameCardView: View
                             .font(.system(.body, design: .rounded))
                             .fontWeight(.bold)
                             .foregroundStyle(.primary)
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 6)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.1)
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 0)
 //                            .background(Color(.tertiarySystemGroupedBackground))
 //                            .clipShape(Capsule())
                     }
@@ -63,6 +67,8 @@ struct GameCardView: View
                     .multilineTextAlignment(.trailing)
                     .frame(maxWidth: .infinity, alignment: .trailing)
                     .fixedSize(horizontal: false, vertical: true)
+                    .lineLimit(3)
+                    .minimumScaleFactor(0.1)
             }
             
             if let broadcasters = game.broadcasters, !broadcasters.isEmpty
@@ -76,7 +82,7 @@ struct GameCardView: View
 
                     ScrollView(.horizontal, showsIndicators: false)
                     {
-                        HStack(spacing: 8)
+                        HStack(spacing: 6)
                         {
                             broadcasterPills(broadcasters)
                         }
@@ -84,7 +90,7 @@ struct GameCardView: View
                 }
             }
         }
-        .padding(16)
+        .padding(12)
 //        .background
 //        {
 //            RoundedRectangle(cornerRadius: 16, style: .continuous)
@@ -147,22 +153,24 @@ struct GameCardView: View
             awayTeam: "Palmeiras",
             date: Date(),
             competition: "Campeonato Brasileiro",
-            homeTeamColor: nil,
-            awayTeamColor: nil,
             broadcasters: ["SporTV", "Premiere", "YouTube (ESPN Brasil)", "YouTube (CazéTV)"],
-            region: "Brasil"
+            region: "Brasil",
+            sportType: nil,
+            homeTeamColor: nil,
+            awayTeamColor: nil
         ))
         
         GameCardView(game: Game(
             id: nil,
-            homeTeam: "Corinthians",
+            homeTeam: "Corinthians Corinthians Corinthians",
             awayTeam: "São Paulo",
             date: Calendar.current.date(byAdding: .hour, value: 2, to: Date()),
             competition: "Brasileirão Série A",
-            homeTeamColor: nil,
-            awayTeamColor: nil,
             broadcasters: ["Globo"],
-            region: "Europa"
+            region: "Europa",
+            sportType: nil,
+            homeTeamColor: nil,
+            awayTeamColor: nil
         ))
     }
     .padding()
