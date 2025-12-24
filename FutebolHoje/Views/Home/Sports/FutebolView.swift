@@ -10,6 +10,7 @@ import SwiftUI
 struct FutebolView: View
 {
     @StateObject private var viewModel = GamesViewModel()
+    @State private var showCompetitionSelector = false
     
     var body: some View
     {
@@ -25,15 +26,23 @@ struct FutebolView: View
                     toggleRegion("Brasil")
                 }
                 
-                FilterButtonByRegionView(title: "🇪🇺 Europa", isSelected: viewModel.filterRegions.contains("Europa"))
+                FilterButtonByRegionView(title: "🌏 Mundo", isSelected: viewModel.filterRegions.contains("Europa"))
                 {
                     toggleRegion("Europa")
                 }
                 
                 Spacer()
             }
-            .padding(.top, 12)
+            .padding(.top, 8)
             .padding(.leading)
+            
+            if !viewModel.filterRegions.isEmpty && !viewModel.availableCompetitions.isEmpty
+            {
+                CompetitionFilterButtons(
+                    viewModel: viewModel,
+                    showCompetitionSelector: $showCompetitionSelector
+                )
+            }
             
             if viewModel.filterRegions.isEmpty
             {
@@ -46,6 +55,10 @@ struct FutebolView: View
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .sheet(isPresented: $showCompetitionSelector)
+        {
+            CompetitionSelectorSheet(viewModel: viewModel)
+        }
     }
     
     private func toggleRegion(_ region: String)

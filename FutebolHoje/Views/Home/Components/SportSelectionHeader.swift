@@ -35,7 +35,7 @@ struct SportSelectionHeader: View
                         )
                         .overlay(
                             Capsule()
-                                .stroke(selectedSport == sport ? Color.blue.opacity(0.3) : Color.clear, lineWidth: 1)
+                                .stroke(selectedSport == sport ? Color.blue.opacity(0.4) : Color.clear, lineWidth: 1)
                         )
                 }
                 .buttonStyle(.plain)

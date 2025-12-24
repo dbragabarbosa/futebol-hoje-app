@@ -20,6 +20,8 @@ class GamesViewModel: ObservableObject
     @Published var isLoading: Bool = false
     @Published var errorMessage: String? = nil
     @Published var filterRegions: Set<String> = ["Brasil"]
+    @Published var selectedCompetitions: Set<String> = []
+    @Published var isAllCompetitionsSelected: Bool = true
     @Published var isConnected: Bool = true
     
     private let db = Firestore.firestore()
@@ -84,6 +86,26 @@ class GamesViewModel: ObservableObject
     func updateFilter(regions: Set<String>)
     {
         self.filterRegions = regions
+        
+        // Check if selected competitions are still available with new region filter
+        if !isAllCompetitionsSelected
+        {
+            let currentAvailableCompetitions = Set(availableCompetitions)
+            let selectedStillAvailable = selectedCompetitions.filter { currentAvailableCompetitions.contains($0) }
+            
+            // If none of the selected competitions are available anymore, reset to "All"
+            if selectedStillAvailable.isEmpty
+            {
+                isAllCompetitionsSelected = true
+                selectedCompetitions = []
+            }
+            else
+            {
+                // Keep only the competitions that are still available
+                selectedCompetitions = selectedStillAvailable
+            }
+        }
+        
         applyFilters()
     }
     
@@ -101,7 +123,16 @@ class GamesViewModel: ObservableObject
             if filterRegions.isEmpty { return false }
             
             let normalizedRegion = determineRegion(for: game)
-            return filterRegions.contains(normalizedRegion)
+            guard filterRegions.contains(normalizedRegion) else { return false }
+            
+            // Competition filter
+            if !isAllCompetitionsSelected
+            {
+                guard let competition = game.competition else { return false }
+                guard selectedCompetitions.contains(competition) else { return false }
+            }
+            
+            return true
         }
         .sorted
         { lhs, rhs in
@@ -112,6 +143,62 @@ class GamesViewModel: ObservableObject
         
         self.todayGames = filteredGames
         self.errorMessage = nil
+    }
+    
+    var availableCompetitions: [String]
+    {
+        let calendar = Calendar.current
+        let today = Date()
+        
+        let competitionsSet = Set(
+            allGames
+                .filter { game in
+                    guard let date = game.date else { return false }
+                    guard calendar.isDate(date, inSameDayAs: today) else { return false }
+                    
+                    if filterRegions.isEmpty { return false }
+                    
+                    let normalizedRegion = determineRegion(for: game)
+                    return filterRegions.contains(normalizedRegion)
+                }
+                .compactMap { $0.competition }
+        )
+        
+        return competitionsSet.sorted()
+    }
+    
+    func toggleCompetition(_ competition: String)
+    {
+        if isAllCompetitionsSelected
+        {
+            isAllCompetitionsSelected = false
+            selectedCompetitions = [competition]
+        }
+        else
+        {
+            if selectedCompetitions.contains(competition)
+            {
+                selectedCompetitions.remove(competition)
+                
+                if selectedCompetitions.isEmpty
+                {
+                    isAllCompetitionsSelected = true
+                }
+            }
+            else
+            {
+                selectedCompetitions.insert(competition)
+            }
+        }
+        
+        applyFilters()
+    }
+    
+    func selectAllCompetitions()
+    {
+        isAllCompetitionsSelected = true
+        selectedCompetitions = []
+        applyFilters()
     }
     
     private func determineRegion(for game: Game) -> String
