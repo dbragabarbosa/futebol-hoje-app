@@ -16,7 +16,7 @@ struct GamesListView: View
     {
         ScrollView
         {
-            VStack(spacing: 16)
+            VStack(spacing: 8)
             {
                 if viewModel.isLoading
                 {
@@ -43,7 +43,7 @@ struct GamesListView: View
                 }
             }
             .padding(.horizontal, 20)
-            .padding(.vertical, 16)
+            .padding(.vertical, 12)
         }
         .refreshable
         {

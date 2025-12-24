@@ -33,7 +33,7 @@ struct NoRegionSelectedView: View
                     .fontWeight(.bold)
                     .foregroundStyle(.primary)
                 
-                Text("Selecione Brasil ou Europa acima para visualizar os jogos disponíveis.")
+                Text("Selecione Brasil ou Mundo acima para visualizar os jogos disponíveis.")
                     .font(.body)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)

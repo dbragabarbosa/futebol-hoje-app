@@ -23,7 +23,7 @@ struct HomeView: View
                     VStack(spacing: 0)
                     {
                         SportSelectionHeader(selectedSport: $selectedSport)
-                            .padding(.top, 16)
+                            .padding(.top, 12)
                         
                         switch selectedSport
                         {
