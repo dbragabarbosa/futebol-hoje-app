@@ -10,8 +10,8 @@ import Foundation
 enum SportType: String, CaseIterable, Identifiable
 {
     case futebol = "⚽️ Futebol"
-    case nfl = "🏈 NFL"
     case nba = "🏀 NBA"
+    case nfl = "🏈 NFL"
     
     var id: String { self.rawValue }
 }
