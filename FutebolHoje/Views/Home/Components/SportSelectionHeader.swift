@@ -41,8 +41,9 @@ struct SportSelectionHeader: View
                 .buttonStyle(.plain)
             }
         }
+        .padding(.top, 4)
         .padding(.horizontal)
-        .padding(.bottom, 8)
+        .padding(.bottom, 4)
     }
 }
 

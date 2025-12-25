@@ -17,7 +17,6 @@ struct FutebolView: View
         VStack(spacing: 0)
         {
             DatePickerView()
-                .padding(.top, 4)
             
             HStack(spacing: 12)
             {
@@ -33,8 +32,6 @@ struct FutebolView: View
                 
                 Spacer()
             }
-            .padding(.top, 8)
-            .padding(.leading)
             
             if !viewModel.filterRegions.isEmpty && !viewModel.availableCompetitions.isEmpty
             {
@@ -51,7 +48,6 @@ struct FutebolView: View
             else
             {
                 GamesListView(viewModel: viewModel)
-                    .padding(.top, 4)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)

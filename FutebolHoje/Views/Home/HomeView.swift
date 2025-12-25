@@ -23,7 +23,6 @@ struct HomeView: View
                     VStack(spacing: 0)
                     {
                         SportSelectionHeader(selectedSport: $selectedSport)
-                            .padding(.top, 12)
                         
                         switch selectedSport
                         {
@@ -48,7 +47,6 @@ struct HomeView: View
             if #available(iOS 26, *)
             {
                 CustomTabBarView(activeTab: $activeTab)
-                    .padding(.top, 4)
             }
             else
             {

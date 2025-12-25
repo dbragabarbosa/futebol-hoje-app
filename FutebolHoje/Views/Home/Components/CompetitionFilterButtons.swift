@@ -35,8 +35,7 @@ struct CompetitionFilterButtons: View
                     )
             }
             .buttonStyle(.plain)
-            
-            // "Selecionar competições" button
+
             Button(action: { showCompetitionSelector = true })
             {
                 Text(customSelectionButtonText)
@@ -59,7 +58,8 @@ struct CompetitionFilterButtons: View
             
             Spacer()
         }
-        .padding(.top, 8)
+        .padding(.top, 4)
+        .padding(.bottom, 4)
         .padding(.leading)
     }
     

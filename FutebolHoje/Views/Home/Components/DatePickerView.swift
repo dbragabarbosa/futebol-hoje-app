@@ -25,8 +25,8 @@ struct DatePickerView: View
             
             Spacer()
         }
-        .padding(.horizontal, 20)
-        .padding(.vertical, 12)
+        .padding(.horizontal, 10)
+        .padding(.vertical, 10)
         .background
         {
             RoundedRectangle(cornerRadius: 16, style: .continuous)
@@ -39,6 +39,8 @@ struct DatePickerView: View
                 .stroke(.white.opacity(0.2), lineWidth: 1)
         }
         .padding(.horizontal, 20)
+        .padding(.top, 4)
+        .padding(.bottom, 4)
         .accessibilityLabel("Data de hoje: \(viewModel.dateString)")
         .accessibilityAddTraits(.isStaticText)
         .background(Color(.systemBackground))

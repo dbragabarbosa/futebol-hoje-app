@@ -14,7 +14,7 @@ struct GameCardView: View
     
     var body: some View
     {
-        VStack(alignment: .center, spacing: 6)
+        VStack(alignment: .center, spacing: 10)
         {
             Text(game.competition?.uppercased() ?? "CAMPEONATO")
                 .font(.system(.caption, design: .rounded))
@@ -45,8 +45,8 @@ struct GameCardView: View
                             .foregroundStyle(.primary)
                             .lineLimit(1)
                             .minimumScaleFactor(0.1)
-                            .padding(.horizontal, 6)
-                            .padding(.vertical, 0)
+//                            .padding(.horizontal, 0)
+//                            .padding(.vertical, 0)
 //                            .background(Color(.tertiarySystemGroupedBackground))
 //                            .clipShape(Capsule())
                     }
@@ -82,7 +82,7 @@ struct GameCardView: View
 
                     ScrollView(.horizontal, showsIndicators: false)
                     {
-                        HStack(spacing: 6)
+                        HStack(spacing: 8)
                         {
                             broadcasterPills(broadcasters)
                         }
@@ -90,7 +90,9 @@ struct GameCardView: View
                 }
             }
         }
-        .padding(12)
+        .padding(.vertical, 10)
+        .padding(.horizontal, 14)
+//        .padding(10)
 //        .background
 //        {
 //            RoundedRectangle(cornerRadius: 16, style: .continuous)
@@ -103,7 +105,7 @@ struct GameCardView: View
 //                .stroke(.white.opacity(0.2), lineWidth: 1)
 //        }
         .background(Color(.secondarySystemGroupedBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
         .shadow(color: Color.black.opacity(0.16), radius: 12, x: 0, y: 6)
         .accessibilityElement(children: .combine)
         .accessibilityLabel(accessibilityLabel)
@@ -114,7 +116,7 @@ struct GameCardView: View
         ForEach(broadcasters, id: \.self)
         { broadcaster in
             Text(broadcaster.uppercased())
-                .font(.system(size: 10, weight: .bold))
+                .font(.system(size: 12, weight: .bold))
                 .foregroundStyle(Color.AppTheme.secondary)
                 .padding(.horizontal, 10)
                 .padding(.vertical, 4)
