@@ -14,9 +14,8 @@ struct ThemeSelectionView: View
     var body: some View
     {
         FeedbackCardView(
-//            gradientColors: [.indigo, .purple],
             gradientColors: [Color.AppTheme.secondary, Color.AppTheme.secondary],
-            iconName: "slider.horizontal.below.sun.max",
+            iconName: "light.max",
             title: "Aparência",
             description: "Escolha o tema de sua preferência."
         ) {

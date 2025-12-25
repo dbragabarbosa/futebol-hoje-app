@@ -82,7 +82,7 @@ struct CompetitionSelectorSheet: View
                         .padding(.vertical, 12)
                         .background(
                             RoundedRectangle(cornerRadius: 40, style: .circular)
-                                .fill(Color.purple)
+                                .fill(Color.AppTheme.tertiary)
                         )
                 }
                 .padding(.horizontal, 42)
@@ -125,7 +125,7 @@ fileprivate struct CompetitionCard: View
                 ZStack
                 {
                     Circle()
-                        .fill(isSelected ? Color.purple : Color(.systemGray5))
+                        .fill(isSelected ? Color.AppTheme.tertiary : Color(.systemGray5))
                         .frame(width: 28, height: 28)
                     
                     if isSelected
@@ -152,7 +152,7 @@ fileprivate struct CompetitionCard: View
             )
             .overlay(
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .stroke(isSelected ? Color.purple.opacity(0.3) : Color.clear, lineWidth: 2)
+                    .stroke(isSelected ? Color.AppTheme.tertiary.opacity(0.3) : Color.clear, lineWidth: 2)
             )
         }
         .buttonStyle(.plain)

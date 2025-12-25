@@ -25,11 +25,11 @@ struct FilterButtonByRegionView: View
                 .padding(.horizontal, 16)
                 .background(
                     Capsule()
-                        .fill(isSelected ? Color.green.opacity(0.1) : Color.clear)
+                        .fill(isSelected ? Color.AppTheme.primary.opacity(0.1) : Color.clear)
                 )
                 .overlay(
                     Capsule()
-                        .stroke(isSelected ? Color.green.opacity(0.4) : Color.clear, lineWidth: 1)
+                        .stroke(isSelected ? Color.AppTheme.primary.opacity(0.7) : Color.clear, lineWidth: 1)
                 )
         }
         .buttonStyle(.plain)

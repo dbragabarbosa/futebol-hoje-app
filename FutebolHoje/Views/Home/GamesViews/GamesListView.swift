@@ -204,13 +204,13 @@ fileprivate struct ContentUnavailableView: View
                         .padding(.vertical, 12)
                         .background(
                             LinearGradient(
-                                colors: [.blue, .blue.opacity(0.8)],
+                                colors: [Color.AppTheme.primary, Color.AppTheme.primary],
                                 startPoint: .top,
                                 endPoint: .bottom
                             )
                         )
                         .clipShape(Capsule())
-                        .shadow(color: .blue.opacity(0.3), radius: 5, x: 0, y: 3)
+                        .shadow(color: Color.AppTheme.primary.opacity(0.3), radius: 5, x: 0, y: 3)
                 }
                 .padding(.top, 12)
             }

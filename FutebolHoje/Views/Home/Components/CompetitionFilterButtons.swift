@@ -31,7 +31,7 @@ struct CompetitionFilterButtons: View
                     )
                     .overlay(
                         Capsule()
-                            .stroke(viewModel.isAllCompetitionsSelected ? Color.gray.opacity(0.4) : Color.clear, lineWidth: 1)
+                            .stroke(viewModel.isAllCompetitionsSelected ? Color.gray.opacity(0.6) : Color.clear, lineWidth: 1)
                     )
             }
             .buttonStyle(.plain)

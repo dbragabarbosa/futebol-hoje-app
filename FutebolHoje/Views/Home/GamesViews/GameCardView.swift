@@ -115,14 +115,14 @@ struct GameCardView: View
         { broadcaster in
             Text(broadcaster.uppercased())
                 .font(.system(size: 10, weight: .bold))
-                .foregroundStyle(.blue)
+                .foregroundStyle(Color.AppTheme.secondary)
                 .padding(.horizontal, 10)
                 .padding(.vertical, 4)
-                .background(Color.blue.opacity(0.1))
+                .background(Color.AppTheme.secondary.opacity(0.1))
                 .clipShape(Capsule())
                 .overlay(
                     Capsule()
-                        .stroke(Color.blue.opacity(0.2), lineWidth: 1)
+                        .stroke(Color.AppTheme.secondary.opacity(0.2), lineWidth: 1)
                 )
         }
     }
