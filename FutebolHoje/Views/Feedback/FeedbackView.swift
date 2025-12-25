@@ -43,6 +43,7 @@ struct FeedbackView: View
             .navigationBarHidden(true)
             .background(Color(.systemGroupedBackground))
         }
+        .navigationViewStyle(.stack)
     }
 }
 

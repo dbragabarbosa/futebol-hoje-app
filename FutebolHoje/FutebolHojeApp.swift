@@ -34,6 +34,7 @@ struct FutebolHojeApp: App
 //                ContentView()
                 HomeView()
             }
+            .navigationViewStyle(.stack)
             .environmentObject(themeManager)
             .preferredColorScheme(themeManager.colorScheme)
         }
