@@ -148,7 +148,7 @@ fileprivate struct CompetitionCard: View
             .background(
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
                     .fill(Color(.systemBackground))
-                    .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 2)
+                    .shadow(color: Color.black.opacity(0.16), radius: 12, x: 0, y: 6)
             )
             .overlay(
                 RoundedRectangle(cornerRadius: 12, style: .continuous)

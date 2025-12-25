@@ -13,43 +13,12 @@ struct RateAppView: View
     
     var body: some View
     {
-        VStack(spacing: 20)
-        {
-            HStack(spacing: 16)
-            {
-                ZStack
-                {
-                    Circle()
-                        .fill(
-                            LinearGradient(
-                                colors: [.yellow, .orange],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                        )
-                        .frame(width: 56, height: 56)
-                    
-                    Image(systemName: "star.fill")
-                        .font(.system(size: 24, weight: .semibold))
-                        .foregroundStyle(.white)
-                }
-                
-                VStack(alignment: .leading, spacing: 4)
-                {
-                    Text("Avaliar na App Store")
-                        .font(.title3)
-                        .fontWeight(.bold)
-                        .foregroundStyle(.primary)
-                    
-                    Text("Leva apenas um minuto!")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-                
-                Spacer()
-            }
-            
+        FeedbackCardView(
+            gradientColors: [Color.AppTheme.secondary, Color.AppTheme.secondary],
+            iconName: "star.fill",
+            title: "Avaliar na App Store",
+            description: "Leva menos de um minuto!"
+        ) {
             Button(action: {
                 viewModel.rateApp()
             }) {
@@ -63,22 +32,19 @@ struct RateAppView: View
                     Image(systemName: "star.circle.fill")
                         .font(.headline)
                 }
-                .padding()
+                .padding(.vertical, 10)
+                .padding(.horizontal)
                 .frame(maxWidth: .infinity)
-                .background(Color.yellow.opacity(0.15))
-                .foregroundStyle(.orange)
+                .background(Color.AppTheme.secondary.opacity(0.10))
+                .foregroundStyle(Color.AppTheme.secondary)
                 .cornerRadius(12)
                 .overlay(
                     RoundedRectangle(cornerRadius: 12)
-                        .stroke(Color.yellow.opacity(0.3), lineWidth: 1)
+                        .stroke(Color.AppTheme.secondary.opacity(0.3), lineWidth: 1)
                 )
             }
             .buttonStyle(.plain)
         }
-        .padding(20)
-        .background(Color(.secondarySystemGroupedBackground))
-        .cornerRadius(20)
-        .shadow(color: Color.black.opacity(0.06), radius: 10, x: 0, y: 4)
     }
 }
 

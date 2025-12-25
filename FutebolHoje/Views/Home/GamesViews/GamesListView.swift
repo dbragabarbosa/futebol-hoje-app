@@ -147,7 +147,6 @@ struct GamesListView: View
     }
 }
 
-// MARK: - Helper Component
 fileprivate struct ContentUnavailableView: View
 {
     let icon: String
@@ -169,11 +168,12 @@ fileprivate struct ContentUnavailableView: View
                 Image(systemName: icon)
                     .font(.system(size: 48))
                     .foregroundStyle(
-                        LinearGradient(
-                            colors: [.blue, .purple],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
+                        .mint
+//                        LinearGradient(
+//                            colors: [.mint, .mint],
+//                            startPoint: .topLeading,
+//                            endPoint: .bottomTrailing
+//                        )
                     )
             }
             .padding(.bottom, 8)

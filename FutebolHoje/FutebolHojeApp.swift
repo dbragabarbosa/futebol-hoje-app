@@ -23,6 +23,8 @@ struct FutebolHojeApp: App
 {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     
+    @StateObject private var themeManager = ThemeManager()
+    
     var body: some Scene
     {
         WindowGroup
@@ -32,6 +34,8 @@ struct FutebolHojeApp: App
 //                ContentView()
                 HomeView()
             }
+            .environmentObject(themeManager)
+            .preferredColorScheme(themeManager.colorScheme)
         }
     }
 }
