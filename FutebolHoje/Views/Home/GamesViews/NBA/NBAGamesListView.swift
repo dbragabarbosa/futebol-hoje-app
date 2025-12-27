@@ -24,7 +24,8 @@ struct NBAGamesListView: View
                 }
                 else if let errorMessage = viewModel.errorMessage
                 {
-                    errorView(message: errorMessage)
+                    ErrorView(message: errorMessage,
+                              action: { Task { await refreshGames() } } )
                 }
                 else if viewModel.displayedGames.isEmpty
                 {
@@ -64,41 +65,6 @@ struct NBAGamesListView: View
         {
             await refreshGames()
         }
-    }
-    
-    private func errorView(message: String) -> some View
-    {
-        VStack(spacing: 20)
-        {
-            Image(systemName: "exclamationmark.triangle")
-                .font(.system(size: 48))
-                .foregroundStyle(.orange)
-            
-            Text(message)
-                .font(.system(.body, design: .rounded))
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
-            
-            Button(action: { viewModel.refreshGames() })
-            {
-                HStack
-                {
-                    Image(systemName: "arrow.clockwise")
-                    Text("Tentar Novamente")
-                }
-                .font(.system(.subheadline, design: .rounded))
-                .fontWeight(.medium)
-                .foregroundStyle(.white)
-                .padding(.horizontal, 24)
-                .padding(.vertical, 12)
-                .background(.blue)
-                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-            }
-        }
-        .frame(maxWidth: .infinity)
-        .padding(.vertical, 60)
-        .accessibilityElement(children: .combine)
-        .accessibilityLabel("Erro: \(message). Botão tentar novamente")
     }
     
     private var gamesList: some View
