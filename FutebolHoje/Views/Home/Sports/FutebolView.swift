@@ -16,7 +16,7 @@ struct FutebolView: View
     {
         VStack(spacing: 0)
         {
-            DatePickerView()
+            DatePickerView(viewModel: viewModel)
             
             HStack(spacing: 12)
             {

@@ -10,45 +10,47 @@ import SwiftUI
 
 struct DatePickerView: View
 {
-    @StateObject private var viewModel = DatePickerViewModel()
+    @ObservedObject var viewModel: GamesViewModel
+    
+    private static let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "EEEE, d 'de' MMMM"
+        formatter.locale = Locale(identifier: "pt_BR")
+        return formatter
+    }()
     
     var body: some View
     {
-        HStack
+        HStack(spacing: 8)
         {
-            Spacer()
+            DateButton(
+                title: todayString,
+                isSelected: Calendar.current.isDateInToday(viewModel.selectedDate)
+            ) {
+                viewModel.selectToday()
+            }
             
-            Text(viewModel.dateString)
-                .font(.system(.subheadline, design: .rounded))
-                .fontWeight(.medium)
-                .foregroundStyle(.primary)
-            
-            Spacer()
-        }
-        .padding(.horizontal, 10)
-        .padding(.vertical, 10)
-        .background
-        {
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .fill(.thinMaterial)
-//                .shadow(color: .black.opacity(0.1), radius: 8, x: 0, y: 2)
-        }
-        .overlay
-        {
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .stroke(.white.opacity(0.2), lineWidth: 1)
+            DateButton(
+                title: "Amanhã",
+                isSelected: Calendar.current.isDateInTomorrow(viewModel.selectedDate),
+                expands: false
+            ) {
+                viewModel.selectTomorrow()
+            }
         }
         .padding(.horizontal, 20)
         .padding(.top, 4)
         .padding(.bottom, 4)
-        .accessibilityLabel("Data de hoje: \(viewModel.dateString)")
-        .accessibilityAddTraits(.isStaticText)
         .background(Color(.systemBackground))
+    }
+    
+    private var todayString: String
+    {
+        return Self.dateFormatter.string(from: Date()).capitalized
     }
 }
 
 #Preview
 {
-    DatePickerView()
-        .padding()
+    DatePickerView(viewModel: GamesViewModel())
 }

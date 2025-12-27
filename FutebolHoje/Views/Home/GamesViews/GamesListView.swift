@@ -26,7 +26,7 @@ struct GamesListView: View
                 {
                     errorView(message: errorMessage)
                 }
-                else if viewModel.todayGames.isEmpty
+                else if viewModel.displayedGames.isEmpty
                 {
                     if viewModel.isConnected
                     {
@@ -132,7 +132,7 @@ struct GamesListView: View
     
     private var gamesList: some View
     {
-        ForEach(viewModel.todayGames)
+        ForEach(viewModel.displayedGames)
         { game in
             GameCardView(game: game)
         }
@@ -226,7 +226,7 @@ fileprivate struct ContentUnavailableView: View
     VStack(spacing: 0)
     {
 //        HeaderView()
-        DatePickerView()
+        DatePickerView(viewModel: GamesViewModel())
         Divider()
         
         GamesListView(viewModel: GamesViewModel())
