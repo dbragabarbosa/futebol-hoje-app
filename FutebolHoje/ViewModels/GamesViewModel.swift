@@ -16,23 +16,26 @@ import FirebaseFirestore
 class GamesViewModel: ObservableObject
 {
     @Published var games: [Game] = []
-    @Published var todayGames: [Game] = []
+    @Published var displayedGames: [Game] = []
+    @Published var selectedDate: Date = Date()
     @Published var isLoading: Bool = false
     @Published var errorMessage: String? = nil
     @Published var filterRegions: Set<String> = ["Brasil"]
     @Published var selectedCompetitions: Set<String> = []
+    @Published var availableCompetitions: [String] = []
     @Published var isAllCompetitionsSelected: Bool = true
     @Published var isConnected: Bool = true
+    @Published var allGames: [Game] = []
+    
+    private var cancellables = Set<AnyCancellable>()
     
     private let db = Firestore.firestore()
     private let networkMonitor = NetworkMonitor()
-    private var allGames: [Game] = []
-    
-    private var cancellables = Set<AnyCancellable>()
     
     init()
     {
         setupNetworkMonitoring()
+        setupPipeline()
         loadGames()
     }
     
@@ -46,6 +49,42 @@ class GamesViewModel: ObservableObject
             .store(in: &cancellables)
     }
     
+    private func setupPipeline()
+    {
+        // Declarative filtering pipeline
+        Publishers.CombineLatest4($allGames, $selectedDate, $filterRegions, $selectedCompetitions)
+            .receive(on: DispatchQueue.main)
+            .map { [weak self] (games, date, regions, competitions) -> [Game] in
+                guard let self = self else { return [] }
+                return self.filterGames(games, date: date, regions: regions, competitions: competitions, isAllCompetitionsSelected: self.isAllCompetitionsSelected)
+            }
+            .assign(to: &$displayedGames)
+        
+        // Handle "All Competitions" flag state
+        $selectedCompetitions
+            .map { $0.isEmpty }
+            .assign(to: &$isAllCompetitionsSelected)
+            
+        // Refresh "Today" when day changes
+        NotificationCenter.default.publisher(for: .NSCalendarDayChanged)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                guard let self = self else { return }
+                if Calendar.current.isDateInToday(self.selectedDate) {
+                    self.selectedDate = Date()
+                }
+            }
+            .store(in: &cancellables)
+        // Calculate available competitions based on date and region
+        Publishers.CombineLatest3($allGames, $selectedDate, $filterRegions)
+            .receive(on: DispatchQueue.main)
+            .map { [weak self] (games, date, regions) -> [String] in
+                guard let self = self else { return [] }
+                return self.calculateAvailableCompetitions(games: games, date: date, regions: regions)
+            }
+            .assign(to: &$availableCompetitions)
+    }
+            
     private func loadGames()
     {
         isLoading = true
@@ -73,7 +112,7 @@ class GamesViewModel: ObservableObject
                 } ?? []
                 
                 print("✅ Jogos carregados com sucesso: \(self.allGames.count)")
-                self.applyFilters()
+                // Pipeline will handle updates via @Published allGames
             }
             catch
             {
@@ -106,30 +145,29 @@ class GamesViewModel: ObservableObject
             }
         }
         
-        applyFilters()
+        // applyFilters() // Handled by pipeline
     }
     
-    private func applyFilters()
+    private func filterGames(_ games: [Game], date targetDate: Date, regions: Set<String>, competitions: Set<String>, isAllCompetitionsSelected: Bool) -> [Game]
     {
         let calendar = Calendar.current
-        let today = Date()
         
-        let filteredGames = allGames.filter
+        return games.filter
         { game in
             
             guard let date = game.date else { return false }
-            guard calendar.isDate(date, inSameDayAs: today) else { return false }
+            guard calendar.isDate(date, inSameDayAs: targetDate) else { return false }
             
-            if filterRegions.isEmpty { return false }
+            if regions.isEmpty { return false }
             
             let normalizedRegion = determineRegion(for: game)
-            guard filterRegions.contains(normalizedRegion) else { return false }
+            guard regions.contains(normalizedRegion) else { return false }
             
             // Competition filter
             if !isAllCompetitionsSelected
             {
                 guard let competition = game.competition else { return false }
-                guard selectedCompetitions.contains(competition) else { return false }
+                guard competitions.contains(competition) else { return false }
             }
             
             return true
@@ -140,26 +178,22 @@ class GamesViewModel: ObservableObject
             guard let rightDate = rhs.date else { return true }
             return leftDate < rightDate
         }
-        
-        self.todayGames = filteredGames
-        self.errorMessage = nil
     }
     
-    var availableCompetitions: [String]
+    private func calculateAvailableCompetitions(games: [Game], date targetDate: Date, regions: Set<String>) -> [String]
     {
         let calendar = Calendar.current
-        let today = Date()
         
         let competitionsSet = Set(
-            allGames
+            games
                 .filter { game in
                     guard let date = game.date else { return false }
-                    guard calendar.isDate(date, inSameDayAs: today) else { return false }
+                    guard calendar.isDate(date, inSameDayAs: targetDate) else { return false }
                     
-                    if filterRegions.isEmpty { return false }
+                    if regions.isEmpty { return false }
                     
                     let normalizedRegion = determineRegion(for: game)
-                    return filterRegions.contains(normalizedRegion)
+                    return regions.contains(normalizedRegion)
                 }
                 .compactMap { $0.competition }
         )
@@ -191,40 +225,42 @@ class GamesViewModel: ObservableObject
             }
         }
         
-        applyFilters()
+        // applyFilters() // Handled by pipeline
     }
     
     func selectAllCompetitions()
     {
         isAllCompetitionsSelected = true
         selectedCompetitions = []
-        applyFilters()
+        // applyFilters() Handled by pipeline
     }
+    
+    func selectToday()
+    {
+        selectedDate = Date()
+    }
+    
+    func selectTomorrow()
+    {
+        if let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: Date())
+        {
+            selectedDate = tomorrow
+        }
+    }
+    
+    private static let europeanCompetitions = [
+        "UEFA Champions League", "UEFA Europa League", "UEFA Conference League",
+        "Campeonato Alemão", "Campeonato Espanhol", "Campeonato Francês",
+        "Campeonato Inglês", "Campeonato Italiano", "Campeonato Português",
+        "Copa da Inglaterra", "Copa da Liga Inglesa", "Copa do Rei",
+        "Copa da Itália", "Copa da Alemanha", "Copa da França", "Taça de Portugal"
+    ]
     
     private func determineRegion(for game: Game) -> String
     {
-        let europeanCompetitions = [
-            "UEFA Champions League",
-            "UEFA Europa League",
-            "UEFA Conference League",
-            "Campeonato Alemão",
-            "Campeonato Espanhol",
-            "Campeonato Francês",
-            "Campeonato Inglês",
-            "Campeonato Italiano",
-            "Campeonato Português",
-            "Copa da Inglaterra",
-            "Copa da Liga Inglesa",
-            "Copa do Rei",
-            "Copa da Itália",
-            "Copa da Alemanha",
-            "Copa da França",
-            "Taça de Portugal"
-        ]
-        
         let competition = game.competition ?? ""
         
-        if europeanCompetitions.contains(where: { competition.contains($0) })
+        if Self.europeanCompetitions.contains(where: { competition.contains($0) })
         {
             return "Europa"
         }
