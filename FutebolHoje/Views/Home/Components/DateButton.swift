@@ -50,12 +50,12 @@ struct DateButton: View
         else
         {
             RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .fill(Color.secondary.opacity(0.1)) // Subtle background for unselected, or clear if preferred
+                .fill(Color.secondary.opacity(0.1))
         }
     }
 }
 
-#Preview
+#Preview("Light mode")
 {
     HStack
     {
@@ -65,7 +65,7 @@ struct DateButton: View
     .padding()
 }
 
-#Preview
+#Preview("Dark mode")
 {
     HStack
     {
@@ -73,5 +73,5 @@ struct DateButton: View
         DateButton(title: "Tomorrow", isSelected: false, action: {})
     }
     .padding()
-    .background(Color.black) // Dark background to see the glass effect
+    .background(Color.black)
 }

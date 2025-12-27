@@ -9,26 +9,17 @@ import SwiftUI
 
 struct NBAView: View
 {
+    @StateObject private var viewModel = NBAGamesViewModel()
+    
     var body: some View
     {
-        VStack(spacing: 16)
+        VStack(spacing: 0)
         {
-            Image(systemName: "basketball.fill")
-                .font(.system(size: 60))
-                .foregroundStyle(.secondary)
-            
-            Text("Jogos da NBA")
-                .font(.title2)
-                .fontWeight(.bold)
-            
-            Text("Em breve você poderá acompanhar os jogos da NBA aqui.")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
-                .padding(.horizontal)
+            NBADatePickerView(viewModel: viewModel)
+
+            NBAGamesListView(viewModel: viewModel)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color(.systemBackground))
     }
 }
 
