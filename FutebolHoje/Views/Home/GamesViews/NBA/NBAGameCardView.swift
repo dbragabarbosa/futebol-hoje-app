@@ -14,7 +14,7 @@ struct NBAGameCardView: View
     
     var body: some View
     {
-        VStack(alignment: .center, spacing: 10)
+        VStack(alignment: .center, spacing: 14)
         {
             HStack(spacing: 0)
             {
@@ -59,6 +59,8 @@ struct NBAGameCardView: View
                     .lineLimit(3)
                     .minimumScaleFactor(0.1)
             }
+            .padding(.top, 6)
+            .padding(.horizontal, 10)
             
             if let broadcasters = game.broadcasters, !broadcasters.isEmpty
             {
