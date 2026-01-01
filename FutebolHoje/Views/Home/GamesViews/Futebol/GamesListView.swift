@@ -34,7 +34,7 @@ struct GamesListView: View
                         ContentUnavailableView(
                             icon: "sportscourt",
                             title: "Nenhum Jogo Agendado",
-                            message: "Não encontramos partidas oficiais para hoje em nossa base de dados.",
+                            message: "Não encontramos partidas oficiais para esse dia em nossa base de dados.",
                             buttonTitle: nil,
                             action: nil)
                     }
