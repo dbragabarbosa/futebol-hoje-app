@@ -13,6 +13,8 @@ struct FeedbackView: View
     @StateObject private var viewModel = FeedbackViewModel()
     @EnvironmentObject var themeManager: ThemeManager
     
+    private let analytics: AnalyticsService = FirebaseAnalyticsService.shared
+    
     var body: some View
     {
         NavigationView
@@ -44,6 +46,9 @@ struct FeedbackView: View
             .background(Color(.systemGroupedBackground))
         }
         .navigationViewStyle(.stack)
+        .onAppear {
+            analytics.logScreenView("Feedback")
+        }
     }
 }
 

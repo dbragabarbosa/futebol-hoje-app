@@ -7,6 +7,7 @@
 
 import SwiftUI
 import FirebaseCore
+import FirebaseAnalytics
 
 class AppDelegate: NSObject, UIApplicationDelegate
 {
@@ -14,6 +15,20 @@ class AppDelegate: NSObject, UIApplicationDelegate
                    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool
     {
         FirebaseApp.configure()
+
+        #if DEBUG
+        Analytics.setAnalyticsCollectionEnabled(true)
+        print("🔥 Firebase Analytics configured in DEBUG mode")
+        #endif
+
+        let analytics = FirebaseAnalyticsService.shared
+        if let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
+            analytics.setUserProperty("app_version", value: appVersion)
+        }
+        if let language = Locale.current.language.languageCode?.identifier {
+            analytics.setUserProperty("language", value: language)
+        }
+        
         return true
   }
 }

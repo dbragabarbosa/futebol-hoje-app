@@ -14,8 +14,12 @@ class ThemeManager: ObservableObject
     
     @Published var selectedTheme: ThemeMode = .system
     
-    init()
+    private let analytics: AnalyticsService
+    
+    init(analytics: AnalyticsService = FirebaseAnalyticsService.shared)
     {
+        self.analytics = analytics
+        
         if let savedTheme = ThemeMode(rawValue: storedTheme)
         {
             selectedTheme = savedTheme
@@ -26,6 +30,8 @@ class ThemeManager: ObservableObject
     {
         selectedTheme = theme
         storedTheme = theme.rawValue
+        
+        analytics.logEvent(.themeChanged(theme))
     }
     
     var colorScheme: ColorScheme?

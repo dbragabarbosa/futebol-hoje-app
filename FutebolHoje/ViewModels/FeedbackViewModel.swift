@@ -14,11 +14,18 @@ class FeedbackViewModel: ObservableObject
     var objectWillChange: ObservableObjectPublisher? { nil }
     
     private let appStoreId = "6755705162"
-    
     private let contactEmail = "bulbs-grange0h@icloud.com"
+    private let analytics: AnalyticsService
+    
+    init(analytics: AnalyticsService = FirebaseAnalyticsService.shared)
+    {
+        self.analytics = analytics
+    }
     
     func rateApp()
     {
+        analytics.logEvent(.rateAppTapped)
+        
         guard let url = URL(string: "https://apps.apple.com/app/id\(appStoreId)?action=write-review") else { return }
         
         if UIApplication.shared.canOpenURL(url)
@@ -29,6 +36,8 @@ class FeedbackViewModel: ObservableObject
     
     func openEmail()
     {
+        analytics.logEvent(.contactDeveloperTapped)
+        
         let subject = "Contato - Futebol Hoje"
         let body = "Olá, gostaria de falar sobre ..."
         

@@ -10,6 +10,7 @@ import SwiftUI
 struct ShareAppView: View
 {
     private let appLink = URL(string: "https://apps.apple.com/app/id6755705162")!
+    private let analytics: AnalyticsService = FirebaseAnalyticsService.shared
     
     var body: some View
     {
@@ -44,6 +45,9 @@ struct ShareAppView: View
                 )
             }
             .buttonStyle(.plain)
+            .onTapGesture {
+                analytics.logEvent(.shareAppTapped)
+            }
         }
     }
 }

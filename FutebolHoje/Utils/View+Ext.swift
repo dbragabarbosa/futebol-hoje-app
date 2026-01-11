@@ -8,7 +8,6 @@
 import Foundation
 import SwiftUI
 
-/// Blur Fade In/Out
 extension View
 {
     @ViewBuilder

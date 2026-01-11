@@ -31,9 +31,11 @@ class GamesViewModel: ObservableObject
     
     private let db = Firestore.firestore()
     private let networkMonitor = NetworkMonitor()
+    private let analytics: AnalyticsService
     
-    init()
+    init(analytics: AnalyticsService = FirebaseAnalyticsService.shared)
     {
+        self.analytics = analytics
         setupNetworkMonitoring()
         setupPipeline()
         loadGames()
@@ -51,7 +53,6 @@ class GamesViewModel: ObservableObject
     
     private func setupPipeline()
     {
-        // Declarative filtering pipeline
         Publishers.CombineLatest4($allGames, $selectedDate, $filterRegions, $selectedCompetitions)
             .receive(on: DispatchQueue.main)
             .map { [weak self] (games, date, regions, competitions) -> [Game] in
@@ -60,12 +61,10 @@ class GamesViewModel: ObservableObject
             }
             .assign(to: &$displayedGames)
         
-        // Handle "All Competitions" flag state
         $selectedCompetitions
             .map { $0.isEmpty }
             .assign(to: &$isAllCompetitionsSelected)
             
-        // Refresh "Today" when day changes
         NotificationCenter.default.publisher(for: .NSCalendarDayChanged)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
@@ -75,7 +74,15 @@ class GamesViewModel: ObservableObject
                 }
             }
             .store(in: &cancellables)
-        // Calculate available competitions based on date and region
+        
+        $selectedDate
+            .dropFirst()
+            .removeDuplicates()
+            .sink { [weak self] date in
+                self?.analytics.logEvent(.dateFilterChanged(date))
+            }
+            .store(in: &cancellables)
+
         Publishers.CombineLatest3($allGames, $selectedDate, $filterRegions)
             .receive(on: DispatchQueue.main)
             .map { [weak self] (games, date, regions) -> [String] in
@@ -101,6 +108,10 @@ class GamesViewModel: ObservableObject
             {
                 self.errorMessage = "Erro ao carregar jogos. Tente novamente."
                 print("❌ Erro ao carregar jogos: \(error.localizedDescription)")
+                self.analytics.logEvent(.error(message: "Failed to load games", context: "loadGames"))
+                if !self.isConnected {
+                    self.analytics.logEvent(.networkError(context: "loadGames"))
+                }
                 return
             }
 
@@ -112,12 +123,12 @@ class GamesViewModel: ObservableObject
                 } ?? []
                 
                 print("✅ Jogos carregados com sucesso: \(self.allGames.count)")
-                // Pipeline will handle updates via @Published allGames
             }
             catch
             {
                 self.errorMessage = "Erro ao processar dados dos jogos."
                 print("❌ Erro ao decodificar jogos: \(error.localizedDescription)")
+                self.analytics.logEvent(.error(message: "Failed to decode games", context: "loadGames"))
             }
         }
     }
@@ -125,14 +136,13 @@ class GamesViewModel: ObservableObject
     func updateFilter(regions: Set<String>)
     {
         self.filterRegions = regions
+        analytics.logEvent(.regionFilterChanged(regions))
         
-        // Check if selected competitions are still available with new region filter
         if !isAllCompetitionsSelected
         {
             let currentAvailableCompetitions = Set(availableCompetitions)
             let selectedStillAvailable = selectedCompetitions.filter { currentAvailableCompetitions.contains($0) }
             
-            // If none of the selected competitions are available anymore, reset to "All"
             if selectedStillAvailable.isEmpty
             {
                 isAllCompetitionsSelected = true
@@ -140,12 +150,10 @@ class GamesViewModel: ObservableObject
             }
             else
             {
-                // Keep only the competitions that are still available
                 selectedCompetitions = selectedStillAvailable
             }
         }
         
-        // applyFilters() // Handled by pipeline
     }
     
     private func filterGames(_ games: [Game], date targetDate: Date, regions: Set<String>, competitions: Set<String>, isAllCompetitionsSelected: Bool) -> [Game]
@@ -163,7 +171,6 @@ class GamesViewModel: ObservableObject
             let normalizedRegion = determineRegion(for: game)
             guard regions.contains(normalizedRegion) else { return false }
             
-            // Competition filter
             if !isAllCompetitionsSelected
             {
                 guard let competition = game.competition else { return false }
@@ -203,6 +210,8 @@ class GamesViewModel: ObservableObject
     
     func toggleCompetition(_ competition: String)
     {
+        let wasSelected = selectedCompetitions.contains(competition)
+        
         if isAllCompetitionsSelected
         {
             isAllCompetitionsSelected = false
@@ -224,15 +233,15 @@ class GamesViewModel: ObservableObject
                 selectedCompetitions.insert(competition)
             }
         }
-        
-        // applyFilters() // Handled by pipeline
+
+        analytics.logEvent(.competitionFilterChanged(competition: competition, isSelected: !wasSelected))
     }
     
     func selectAllCompetitions()
     {
         isAllCompetitionsSelected = true
         selectedCompetitions = []
-        // applyFilters() Handled by pipeline
+        analytics.logEvent(.allCompetitionsSelected)
     }
     
     func selectToday()

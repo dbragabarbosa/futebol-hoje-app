@@ -13,6 +13,8 @@ struct HomeView: View
     @State private var activeTab: CustomTab = .home
     @State private var selectedSport: SportType = .futebol
     
+    private let analytics: AnalyticsService = FirebaseAnalyticsService.shared
+    
     var body: some View
     {
         VStack(spacing: 0)
@@ -55,6 +57,15 @@ struct HomeView: View
             
         }
         .background(Color(.systemBackground))
+        .onAppear {
+            analytics.logScreenView("Home")
+        }
+        .onChange(of: activeTab) { newValue in
+            analytics.logEvent(.tabChanged(newValue))
+        }
+        .onChange(of: selectedSport) { newValue in
+            analytics.logEvent(.sportSelected(newValue))
+        }
     }
 }
 
