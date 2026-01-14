@@ -16,7 +16,7 @@ struct GamesListView: View
     {
         ScrollView
         {
-            VStack(spacing: 6)
+            LazyVStack(spacing: 6)
             {
                 if viewModel.isLoading
                 {
@@ -73,6 +73,8 @@ struct GamesListView: View
             .padding(.top, 6)
             .padding(.bottom, 8)
         }
+        .scrollDismissesKeyboard(.interactively)
+//        .ignoresSafeArea(.keyboard)
         .refreshable
         {
             await refreshGames()

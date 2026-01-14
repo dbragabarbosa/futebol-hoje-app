@@ -12,6 +12,7 @@ struct HomeView: View
 {
     @State private var activeTab: CustomTab = .home
     @State private var selectedSport: SportType = .futebol
+    @State private var isSearchBarFocused: Bool = false
     
     private let analytics: AnalyticsService = FirebaseAnalyticsService.shared
     
@@ -29,13 +30,13 @@ struct HomeView: View
                         switch selectedSport
                         {
                             case .futebol:
-                                FutebolView()
+                                FutebolView(isSearchBarFocused: $isSearchBarFocused)
                                 
 //                            case .nfl:
 //                                NFLView()
                                 
                             case .nba:
-                                NBAView()
+                                NBAView(isSearchBarFocused: $isSearchBarFocused)
                         }
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -46,13 +47,17 @@ struct HomeView: View
             
             Divider()
             
-            if #available(iOS 26, *)
+            if !isSearchBarFocused
             {
-                CustomTabBarView(activeTab: $activeTab)
-            }
-            else
-            {
-                TabBarForLoweriOSVersions(activeTab: $activeTab)
+                if #available(iOS 26, *)
+                {
+                    CustomTabBarView(activeTab: $activeTab)
+                }
+                else
+                {
+                    TabBarForLoweriOSVersions(activeTab: $activeTab)
+                }
+//                .transition(.move(edge: .bottom).combined(with: .opacity))
             }
             
         }
@@ -62,10 +67,13 @@ struct HomeView: View
         }
         .onChange(of: activeTab) { newValue in
             analytics.logEvent(.tabChanged(newValue))
+            isSearchBarFocused = false
         }
         .onChange(of: selectedSport) { newValue in
             analytics.logEvent(.sportSelected(newValue))
+            isSearchBarFocused = false
         }
+//        .animation(.easeInOut(duration: 0.2), value: isSearchBarFocused)
     }
 }
 

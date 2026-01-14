@@ -10,6 +10,12 @@ import SwiftUI
 struct NBAView: View
 {
     @StateObject private var viewModel = NBAGamesViewModel()
+    @Binding var isSearchBarFocused: Bool
+    
+    init(isSearchBarFocused: Binding<Bool> = .constant(false))
+    {
+        self._isSearchBarFocused = isSearchBarFocused
+    }
     
     var body: some View
     {
@@ -17,7 +23,7 @@ struct NBAView: View
         {
             NBADatePickerView(viewModel: viewModel)
 
-            TeamSearchBar(searchText: $viewModel.searchText)
+            TeamSearchBar(searchText: $viewModel.searchText, isFocused: $isSearchBarFocused)
 
             NBAGamesListView(viewModel: viewModel)
         }
@@ -27,5 +33,5 @@ struct NBAView: View
 
 #Preview
 {
-    NBAView()
+    NBAView(isSearchBarFocused: .constant(false))
 }

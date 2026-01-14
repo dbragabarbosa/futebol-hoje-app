@@ -10,7 +10,8 @@ import SwiftUI
 struct TeamSearchBar: View
 {
     @Binding var searchText: String
-    @FocusState private var isFocused: Bool
+    @Binding var isFocused: Bool
+    @FocusState private var internalIsFocused: Bool
     
     var body: some View
     {
@@ -25,13 +26,17 @@ struct TeamSearchBar: View
                 .textFieldStyle(.plain)
                 .autocorrectionDisabled()
                 .textInputAutocapitalization(.never)
-                .focused($isFocused)
+                .submitLabel(.search)
+                .focused($internalIsFocused)
+                .onChange(of: internalIsFocused) { newValue in
+                    isFocused = newValue
+                }
             
             if !searchText.isEmpty
             {
                 Button(action: {
                     searchText = ""
-                    isFocused = false
+                    internalIsFocused = false
                 })
                 {
                     Image(systemName: "xmark.circle.fill")
@@ -49,7 +54,7 @@ struct TeamSearchBar: View
         )
         .overlay(
             RoundedRectangle(cornerRadius: 10)
-                .stroke(isFocused ? Color.AppTheme.tertiary.opacity(0.5) : Color.clear, lineWidth: 1.5)
+                .stroke(internalIsFocused ? Color.AppTheme.tertiary.opacity(0.5) : Color.clear, lineWidth: 1.5)
         )
         .padding(.horizontal, 20)
         .padding(.top, 4)
@@ -61,8 +66,8 @@ struct TeamSearchBar: View
 {
     VStack
     {
-        TeamSearchBar(searchText: .constant(""))
-        TeamSearchBar(searchText: .constant("Real Madrid"))
+        TeamSearchBar(searchText: .constant(""), isFocused: .constant(false))
+        TeamSearchBar(searchText: .constant("Real Madrid"), isFocused: .constant(false))
     }
     .padding()
 }

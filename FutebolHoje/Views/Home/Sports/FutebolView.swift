@@ -11,6 +11,12 @@ struct FutebolView: View
 {
     @StateObject private var viewModel = GamesViewModel()
     @State private var showCompetitionSelector = false
+    @Binding var isSearchBarFocused: Bool
+    
+    init(isSearchBarFocused: Binding<Bool> = .constant(false))
+    {
+        self._isSearchBarFocused = isSearchBarFocused
+    }
     
     var body: some View
     {
@@ -18,7 +24,7 @@ struct FutebolView: View
         {
             DatePickerView(viewModel: viewModel)
 
-            TeamSearchBar(searchText: $viewModel.searchText)
+            TeamSearchBar(searchText: $viewModel.searchText, isFocused: $isSearchBarFocused)
             
             if viewModel.searchText.isEmpty
             {
@@ -79,5 +85,5 @@ struct FutebolView: View
 
 #Preview
 {
-    FutebolView()
+    FutebolView(isSearchBarFocused: .constant(false))
 }
