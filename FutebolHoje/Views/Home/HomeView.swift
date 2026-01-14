@@ -31,8 +31,8 @@ struct HomeView: View
                             case .futebol:
                                 FutebolView()
                                 
-                            case .nfl:
-                                NFLView()
+//                            case .nfl:
+//                                NFLView()
                                 
                             case .nba:
                                 NBAView()
