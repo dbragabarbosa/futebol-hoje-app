@@ -29,11 +29,11 @@ struct TabBarForLoweriOSVersions: View
                             .font(.title2)
                             .environment(\.symbolVariants, .none)
                         
-                        Text(tab.rawValue)
-                            .font(.caption2)
-                            .fontWeight(activeTab == tab ? .bold : .regular)
+//                        Text(tab.rawValue)
+//                            .font(.caption2)
+//                            .fontWeight(activeTab == tab ? .bold : .regular)
                     }
-                    .foregroundColor(activeTab == tab ? .blue : .gray)
+                    .foregroundColor(activeTab == tab ? Color.AppTheme.secondary : .gray)
                     .frame(maxWidth: .infinity)
                 }
             }

@@ -25,9 +25,9 @@ struct CustomTabBarView: View
                         Image(systemName: tab.symbol)
                             .font(.title3)
 
-                        Text(tab.rawValue)
-                            .font(.system(size: 10))
-                            .fontWeight(.medium)
+//                        Text(tab.rawValue)
+//                            .font(.system(size: 10))
+//                            .fontWeight(.medium)
                     }
                     .symbolVariant(.fill)
                     .frame(maxWidth: .infinity)
