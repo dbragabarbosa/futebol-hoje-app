@@ -79,6 +79,16 @@ struct ContentUnavailableView: View
     }
 }
 
+#Preview("Empty State - No games in search")
+{
+    ContentUnavailableView(
+        icon: "magnifyingglass",
+        title: "Nenhum Jogo Encontrado",
+        message: "Não encontramos jogos para 'BUSCA' no dia selecionado.",
+        buttonTitle: nil,
+        action: nil)
+}
+
 #Preview("Empty State - No Internet")
 {
     ContentUnavailableView(
