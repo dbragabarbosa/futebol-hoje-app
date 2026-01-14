@@ -22,6 +22,7 @@ class NBAGamesViewModel: ObservableObject
     @Published var errorMessage: String? = nil
     @Published var isConnected: Bool = true
     @Published var allGames: [Game] = []
+    @Published var searchText: String = ""
     
     private var cancellables = Set<AnyCancellable>()
     
@@ -53,11 +54,11 @@ class NBAGamesViewModel: ObservableObject
     
     private func refreshToday()
     {
-        Publishers.CombineLatest($allGames, $selectedDate)
+        Publishers.CombineLatest3($allGames, $selectedDate, $searchText)
             .receive(on: DispatchQueue.main)
-            .map { [weak self] (games, date) -> [Game] in
+            .map { [weak self] (games, date, searchText) -> [Game] in
                 guard let self = self else { return [] }
-                return self.filterGames(games, date: date)
+                return self.filterGames(games, date: date, searchText: searchText)
             }
             .assign(to: &$displayedGames)
     }
@@ -111,15 +112,28 @@ class NBAGamesViewModel: ObservableObject
         }
     }
     
-    private func filterGames(_ games: [Game], date targetDate: Date) -> [Game]
+    private func filterGames(_ games: [Game], date targetDate: Date, searchText: String) -> [Game]
     {
         let calendar = Calendar.current
+        let trimmedSearch = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
+        let isSearchActive = !trimmedSearch.isEmpty
         
         return games.filter
         { game in
             
             guard let date = game.date else { return false }
             guard calendar.isDate(date, inSameDayAs: targetDate) else { return false }
+            
+            if isSearchActive
+            {
+                let homeTeam = game.homeTeam ?? ""
+                let awayTeam = game.awayTeam ?? ""
+                
+                let matchesHome = homeTeam.localizedCaseInsensitiveContains(trimmedSearch)
+                let matchesAway = awayTeam.localizedCaseInsensitiveContains(trimmedSearch)
+                
+                return matchesHome || matchesAway
+            }
             
             return true
         }

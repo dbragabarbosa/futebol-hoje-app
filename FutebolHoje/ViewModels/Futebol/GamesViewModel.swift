@@ -26,6 +26,7 @@ class GamesViewModel: ObservableObject
     @Published var isAllCompetitionsSelected: Bool = true
     @Published var isConnected: Bool = true
     @Published var allGames: [Game] = []
+    @Published var searchText: String = ""
     
     private var cancellables = Set<AnyCancellable>()
     
@@ -41,6 +42,14 @@ class GamesViewModel: ObservableObject
         loadGames()
     }
     
+//    init(analytics: AnalyticsService? = nil)
+//    {
+//        self.analytics = analytics ?? FirebaseAnalyticsService.shared
+//        setupNetworkMonitoring()
+//        setupPipeline()
+//        loadGames()
+//    }
+    
     private func setupNetworkMonitoring()
     {
         networkMonitor.$isConnected
@@ -53,11 +62,22 @@ class GamesViewModel: ObservableObject
     
     private func setupPipeline()
     {
-        Publishers.CombineLatest4($allGames, $selectedDate, $filterRegions, $selectedCompetitions)
+        Publishers.CombineLatest(
+            Publishers.CombineLatest4($allGames, $selectedDate, $filterRegions, $selectedCompetitions),
+            $searchText
+        )
             .receive(on: DispatchQueue.main)
-            .map { [weak self] (games, date, regions, competitions) -> [Game] in
+            .map { [weak self] (combined, searchText) -> [Game] in
                 guard let self = self else { return [] }
-                return self.filterGames(games, date: date, regions: regions, competitions: competitions, isAllCompetitionsSelected: self.isAllCompetitionsSelected)
+                let (games, date, regions, competitions) = combined
+                return self.filterGames(
+                    games,
+                    date: date,
+                    regions: regions,
+                    competitions: competitions,
+                    isAllCompetitionsSelected: self.isAllCompetitionsSelected,
+                    searchText: searchText
+                )
             }
             .assign(to: &$displayedGames)
         
@@ -90,6 +110,22 @@ class GamesViewModel: ObservableObject
                 return self.calculateAvailableCompetitions(games: games, date: date, regions: regions)
             }
             .assign(to: &$availableCompetitions)
+        
+        Publishers.CombineLatest($searchText, $displayedGames)
+            .debounce(for: .milliseconds(500), scheduler: DispatchQueue.main)
+            .sink { [weak self] (searchText, displayedGames) in
+                guard let self = self else { return }
+                let trimmedSearch = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
+                if !trimmedSearch.isEmpty
+                {
+                    self.analytics.logEvent(.teamSearchPerformed(
+                        query: trimmedSearch,
+                        resultsCount: displayedGames.count,
+                        sport: "Futebol"
+                    ))
+                }
+            }
+            .store(in: &cancellables)
     }
             
     private func loadGames()
@@ -156,16 +192,29 @@ class GamesViewModel: ObservableObject
         
     }
     
-    private func filterGames(_ games: [Game], date targetDate: Date, regions: Set<String>, competitions: Set<String>, isAllCompetitionsSelected: Bool) -> [Game]
+    private func filterGames(_ games: [Game], date targetDate: Date, regions: Set<String>, competitions: Set<String>, isAllCompetitionsSelected: Bool, searchText: String) -> [Game]
     {
         let calendar = Calendar.current
+        let trimmedSearch = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
+        let isSearchActive = !trimmedSearch.isEmpty
         
         return games.filter
         { game in
             
             guard let date = game.date else { return false }
             guard calendar.isDate(date, inSameDayAs: targetDate) else { return false }
-            
+
+            if isSearchActive
+            {
+                let homeTeam = game.homeTeam ?? ""
+                let awayTeam = game.awayTeam ?? ""
+                
+                let matchesHome = homeTeam.localizedCaseInsensitiveContains(trimmedSearch)
+                let matchesAway = awayTeam.localizedCaseInsensitiveContains(trimmedSearch)
+                
+                return matchesHome || matchesAway
+            }
+
             if regions.isEmpty { return false }
             
             let normalizedRegion = determineRegion(for: game)

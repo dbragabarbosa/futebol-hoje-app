@@ -17,6 +17,8 @@ struct FutebolView: View
         VStack(spacing: 0)
         {
             DatePickerView(viewModel: viewModel)
+
+            TeamSearchBar(searchText: $viewModel.searchText)
             
             HStack(spacing: 12)
             {

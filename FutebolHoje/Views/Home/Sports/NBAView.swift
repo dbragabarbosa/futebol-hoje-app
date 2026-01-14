@@ -17,6 +17,8 @@ struct NBAView: View
         {
             NBADatePickerView(viewModel: viewModel)
 
+            TeamSearchBar(searchText: $viewModel.searchText)
+
             NBAGamesListView(viewModel: viewModel)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)

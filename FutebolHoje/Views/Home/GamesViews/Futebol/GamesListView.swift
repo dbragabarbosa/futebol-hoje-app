@@ -29,7 +29,19 @@ struct GamesListView: View
                 }
                 else if viewModel.displayedGames.isEmpty
                 {
-                    if viewModel.isConnected
+                    let trimmedSearch = viewModel.searchText.trimmingCharacters(in: .whitespacesAndNewlines)
+                    let isSearchActive = !trimmedSearch.isEmpty
+                    
+                    if isSearchActive
+                    {
+                        ContentUnavailableView(
+                            icon: "magnifyingglass",
+                            title: "Nenhum Jogo Encontrado",
+                            message: "Não encontramos jogos para '\(trimmedSearch)' no dia selecionado.",
+                            buttonTitle: nil,
+                            action: nil)
+                    }
+                    else if viewModel.isConnected
                     {
                         ContentUnavailableView(
                             icon: "sportscourt",

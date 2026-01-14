@@ -27,6 +27,7 @@ enum AnalyticsEvent
     
     case error(message: String, context: String)
     case networkError(context: String)
+    case teamSearchPerformed(query: String, resultsCount: Int, sport: String)
     
     var name: String 
     {
@@ -60,6 +61,8 @@ enum AnalyticsEvent
                 return "app_error"
             case .networkError:
                 return "network_error"
+            case .teamSearchPerformed:
+                return "team_search_performed"
         }
     }
     
@@ -127,6 +130,13 @@ enum AnalyticsEvent
                 
             case .networkError(let context):
                 return ["context": context]
+                
+            case .teamSearchPerformed(let query, let resultsCount, let sport):
+                return [
+                    "search_query": query,
+                    "results_count": resultsCount,
+                    "sport": sport
+                ]
         }
     }
 }
