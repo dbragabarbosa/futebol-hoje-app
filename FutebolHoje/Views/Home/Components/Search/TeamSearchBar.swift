@@ -49,7 +49,7 @@ struct TeamSearchBar: View
         )
         .overlay(
             RoundedRectangle(cornerRadius: 10)
-                .stroke(isFocused ? Color.AppTheme.primary.opacity(0.5) : Color.clear, lineWidth: 1.5)
+                .stroke(isFocused ? Color.AppTheme.tertiary.opacity(0.5) : Color.clear, lineWidth: 1.5)
         )
         .padding(.horizontal, 20)
         .padding(.top, 4)

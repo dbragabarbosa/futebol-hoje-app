@@ -31,11 +31,11 @@ struct SportSelectionHeader: View
                         .padding(.horizontal, 12)
                         .background(
                             Capsule()
-                                .fill(selectedSport == sport ? Color.AppTheme.secondary.opacity(0.1) : Color.clear)
+                                .fill(selectedSport == sport ? Color.AppTheme.tertiary.opacity(0.1) : Color.clear)
                         )
                         .overlay(
                             Capsule()
-                                .stroke(selectedSport == sport ? Color.AppTheme.secondary.opacity(0.9) : Color.clear, lineWidth: 1)
+                                .stroke(selectedSport == sport ? Color.AppTheme.tertiary.opacity(0.9) : Color.clear, lineWidth: 1)
                         )
                 }
                 .buttonStyle(.plain)

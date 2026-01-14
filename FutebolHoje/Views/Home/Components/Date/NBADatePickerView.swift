@@ -40,7 +40,7 @@ struct NBADatePickerView: View
         }
         .padding(.horizontal, 20)
         .padding(.top, 4)
-        .padding(.bottom, 6)
+        .padding(.bottom, 4)
         .background(Color(.systemBackground))
     }
     
