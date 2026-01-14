@@ -20,30 +20,33 @@ struct FutebolView: View
 
             TeamSearchBar(searchText: $viewModel.searchText)
             
-            HStack(spacing: 12)
+            if viewModel.searchText.isEmpty
             {
-                FilterButtonByRegionView(title: "🇧🇷 Brasil", isSelected: viewModel.filterRegions.contains("Brasil"))
+                HStack(spacing: 12)
                 {
-                    toggleRegion("Brasil")
+                    FilterButtonByRegionView(title: "🇧🇷 Brasil", isSelected: viewModel.filterRegions.contains("Brasil"))
+                    {
+                        toggleRegion("Brasil")
+                    }
+                    
+                    FilterButtonByRegionView(title: "🌏 Mundo", isSelected: viewModel.filterRegions.contains("Europa"))
+                    {
+                        toggleRegion("Europa")
+                    }
+                    
+                    Spacer()
                 }
                 
-                FilterButtonByRegionView(title: "🌏 Mundo", isSelected: viewModel.filterRegions.contains("Europa"))
+                if !viewModel.filterRegions.isEmpty && !viewModel.availableCompetitions.isEmpty
                 {
-                    toggleRegion("Europa")
+                    CompetitionFilterButtons(
+                        viewModel: viewModel,
+                        showCompetitionSelector: $showCompetitionSelector
+                    )
                 }
-                
-                Spacer()
             }
             
-            if !viewModel.filterRegions.isEmpty && !viewModel.availableCompetitions.isEmpty
-            {
-                CompetitionFilterButtons(
-                    viewModel: viewModel,
-                    showCompetitionSelector: $showCompetitionSelector
-                )
-            }
-            
-            if viewModel.filterRegions.isEmpty
+            if viewModel.filterRegions.isEmpty && viewModel.searchText.isEmpty
             {
                 NoRegionSelectedView()
             }
