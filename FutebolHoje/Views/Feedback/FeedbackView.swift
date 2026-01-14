@@ -28,8 +28,8 @@ struct FeedbackView: View
                         AppHeaderView()
                             .padding(.horizontal, 20)
                     }
-                    .padding(.top, 16)
-                    .padding(.bottom, 8)
+                    .padding(.top, 6)
+                    .padding(.bottom, 6)
 
                     VStack(spacing: 12)
                     {
@@ -52,15 +52,19 @@ struct FeedbackView: View
     }
 }
 
-private struct AppHeaderView: View {
-    private var appName: String {
-        if let displayName = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String, !displayName.isEmpty {
+private struct AppHeaderView: View
+{
+    private var appName: String
+    {
+        if let displayName = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String, !displayName.isEmpty
+        {
             return displayName
         }
         return Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as? String ?? ""
     }
     
-    private var appIcon: UIImage? {
+    private var appIcon: UIImage?
+    {
         guard
             let info = Bundle.main.infoDictionary,
             let icons = info["CFBundleIcons"] as? [String: Any],
@@ -74,18 +78,21 @@ private struct AppHeaderView: View {
         return image
     }
     
-    var body: some View {
-        HStack(spacing: 16) {
-            if let icon = appIcon {
+    var body: some View
+    {
+        HStack(spacing: 16)
+        {
+            if let icon = appIcon
+            {
                 Image(uiImage: icon)
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 48, height: 48)
+                    .frame(width: 40, height: 40)
                     .cornerRadius(14)
                     .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
             }
             Text(appName)
-                .font(.title)
+                .font(.title2)
                 .fontWeight(.bold)
                 .multilineTextAlignment(.center)
             

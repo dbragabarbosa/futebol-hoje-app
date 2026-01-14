@@ -24,13 +24,14 @@ struct FeedbackCardView<Content: View>: View
                 ZStack
                 {
                     Circle()
-                        .fill(
-                            LinearGradient(
-                                colors: gradientColors,
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                        )
+                        .fill(.gray.opacity(0.9))
+//                        .fill(
+//                            LinearGradient(
+//                                colors: gradientColors,
+//                                startPoint: .topLeading,
+//                                endPoint: .bottomTrailing
+//                            )
+//                        )
                         .frame(width: 40, height: 40)
                     
                     Image(systemName: iconName)
@@ -71,7 +72,7 @@ struct FeedbackCardView<Content: View>: View
             .ignoresSafeArea()
         
         FeedbackCardView(
-            gradientColors: [.brown, .brown],
+            gradientColors: [Color.AppTheme.secondary, Color.AppTheme.secondary],
             iconName: "star.fill",
             title: "Exemplo",
             description: "Esta é uma descrição de exemplo"
@@ -89,12 +90,12 @@ struct FeedbackCardView<Content: View>: View
                 }
                 .padding()
                 .frame(maxWidth: .infinity)
-                .background(Color.brown.opacity(0.1))
-                .foregroundStyle(.brown)
+//                .background(Color.AppTheme.secondary.opacity(0.1))
+                .foregroundStyle(Color.AppTheme.secondary)
                 .cornerRadius(12)
                 .overlay(
                     RoundedRectangle(cornerRadius: 12)
-                        .stroke(Color.brown.opacity(0.2), lineWidth: 1)
+                        .stroke(Color.AppTheme.secondary.opacity(0.2), lineWidth: 1)
                 )
             }
             .buttonStyle(.plain)
