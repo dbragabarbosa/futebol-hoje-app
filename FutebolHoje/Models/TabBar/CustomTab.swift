@@ -10,8 +10,8 @@ import Foundation
 enum CustomTab: String, CaseIterable
 {
     case home = "Home"
+    case notifications = "Notifications"
     case feedback = "Feedback"
-//    case notifications = "Notifications"
 //    case settings = "Settings"
 //    case review = "Review"
 //    case feedback2 = "Feedback "
@@ -24,6 +24,7 @@ enum CustomTab: String, CaseIterable
         switch self
         {
             case .home: return "house.fill"
+            case .notifications: return "bell.fill"
             case .feedback: return "bubble.left.and.bubble.right.fill"
 //            case .feedback: return "gearshape.fill"
 //            case .notifications: return "bell"
@@ -41,6 +42,7 @@ enum CustomTab: String, CaseIterable
         switch self
         {
             case .home: return "house"
+            case .notifications: return "bell"
             case .feedback: return "bubble.left.and.bubble.right"
 //            case .feedback: return "gearshape"
 //            case .notifications: return "tray.full.fill"

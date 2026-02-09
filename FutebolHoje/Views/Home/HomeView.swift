@@ -41,6 +41,9 @@ struct HomeView: View
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     
+                case .notifications:
+                    NotificationsView()
+                    
                 case .feedback:
                     FeedbackView()
             }

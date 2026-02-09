@@ -29,6 +29,11 @@ enum AnalyticsEvent
     case networkError(context: String)
     case teamSearchPerformed(query: String, resultsCount: Int, sport: String)
     
+    case favoriteTeamSelected(team: String)
+    case favoriteTeamCleared
+    case notificationPermissionRequested(granted: Bool)
+    case gameNotificationScheduled(team: String, gameId: String)
+    
     var name: String 
     {
         switch self 
@@ -63,6 +68,14 @@ enum AnalyticsEvent
                 return "network_error"
             case .teamSearchPerformed:
                 return "team_search_performed"
+            case .favoriteTeamSelected:
+                return "favorite_team_selected"
+            case .favoriteTeamCleared:
+                return "favorite_team_cleared"
+            case .notificationPermissionRequested:
+                return "notification_permission_requested"
+            case .gameNotificationScheduled:
+                return "game_notification_scheduled"
         }
     }
     
@@ -136,6 +149,21 @@ enum AnalyticsEvent
                     "search_query": query,
                     "results_count": resultsCount,
                     "sport": sport
+                ]
+                
+            case .favoriteTeamSelected(let team):
+                return ["team": team]
+                
+            case .favoriteTeamCleared:
+                return nil
+                
+            case .notificationPermissionRequested(let granted):
+                return ["granted": granted]
+                
+            case .gameNotificationScheduled(let team, let gameId):
+                return [
+                    "team": team,
+                    "game_id": gameId
                 ]
         }
     }
