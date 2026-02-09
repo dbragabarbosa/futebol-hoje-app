@@ -45,6 +45,10 @@ struct NotificationsView: View
         {
             analytics.logScreenView("Notifications")
         }
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification))
+        { _ in
+            viewModel.checkNotificationPermission()
+        }
     }
 }
 

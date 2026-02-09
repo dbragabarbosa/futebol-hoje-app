@@ -8,6 +8,14 @@
 import Foundation
 import Combine
 import FirebaseFirestore
+import UserNotifications
+
+enum NotificationPermissionStatus
+{
+    case notDetermined
+    case authorized
+    case denied
+}
 
 @MainActor
 final class NotificationsViewModel: ObservableObject
@@ -17,6 +25,7 @@ final class NotificationsViewModel: ObservableObject
     @Published var todayGamesForFavoriteTeam: [Game] = []
     @Published private var allGames: [Game] = []
     
+    private var permissionStatus: NotificationPermissionStatus = .notDetermined
     private let favoriteTeamManager: FavoriteTeamManager
     private let notificationService: NotificationService
     private let analytics: AnalyticsService
@@ -56,13 +65,26 @@ final class NotificationsViewModel: ObservableObject
     
     func requestNotificationPermission() async
     {
+        if permissionStatus == .denied
+        {
+            openSettings()
+            return
+        }
+        
         let granted = await notificationService.requestAuthorization()
+        permissionStatus = granted ? .authorized : .denied
         notificationPermissionGranted = granted
         
         if granted
         {
             await scheduleNotificationsIfNeeded()
         }
+    }
+    
+    private func openSettings()
+    {
+        guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
+        UIApplication.shared.open(url)
     }
     
     private func setupBindings()
@@ -133,12 +155,23 @@ final class NotificationsViewModel: ObservableObject
         }
     }
     
-    private func checkNotificationPermission()
+    func checkNotificationPermission()
     {
         Task
         {
             let settings = await UNUserNotificationCenter.current().notificationSettings()
-            notificationPermissionGranted = settings.authorizationStatus == .authorized
+            switch settings.authorizationStatus
+            {
+                case .authorized, .provisional, .ephemeral:
+                    permissionStatus = .authorized
+                    notificationPermissionGranted = true
+                case .denied:
+                    permissionStatus = .denied
+                    notificationPermissionGranted = false
+                default:
+                    permissionStatus = .notDetermined
+                    notificationPermissionGranted = false
+            }
         }
     }
     
