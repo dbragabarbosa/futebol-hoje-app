@@ -8,8 +8,6 @@
 import Foundation
 import UserNotifications
 
-/// Protocolo para abstração do serviço de notificações.
-/// Permite trocar a implementação (Local → Push) sem alterar o restante do código.
 protocol NotificationService
 {
     func requestAuthorization() async -> Bool

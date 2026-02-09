@@ -8,7 +8,6 @@
 import Foundation
 import UserNotifications
 
-/// Implementação de NotificationService usando notificações locais.
 final class LocalNotificationService: NotificationService
 {
     static let shared = LocalNotificationService()

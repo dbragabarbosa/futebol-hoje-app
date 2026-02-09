@@ -18,7 +18,7 @@ struct NotificationsHeaderView: View
             
             VStack(alignment: .leading, spacing: 2)
             {
-                Text("Escolha seu time favorito")
+                Text("Escolha seu time favorito da Série A")
                     .font(.system(.headline, design: .rounded))
                     .fontWeight(.bold)
                 
