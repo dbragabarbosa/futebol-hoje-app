@@ -16,12 +16,25 @@ struct GameCardView: View
     {
         VStack(alignment: .center, spacing: 10)
         {
-            Text(game.competition?.uppercased() ?? "CAMPEONATO")
-                .font(.system(.caption, design: .rounded))
-                .fontWeight(.bold)
-                .foregroundStyle(.secondary)
-                .tracking(1)
-                .multilineTextAlignment(.center)
+            ZStack
+            {
+                Text(game.competition?.uppercased() ?? "CAMPEONATO")
+                    .font(.system(.caption, design: .rounded))
+                    .fontWeight(.bold)
+                    .foregroundStyle(.secondary)
+                    .tracking(1)
+                    .multilineTextAlignment(.center)
+                    .frame(maxWidth: .infinity)
+
+                if shouldShowHighlightsButton, let url = highlightsURL
+                {
+                    HStack
+                    {
+                        Spacer()
+                        HighlightsLinkView(url: url)
+                    }
+                }
+            }
             
             HStack(spacing: 0)
             {
@@ -127,6 +140,21 @@ struct GameCardView: View
                         .stroke(Color.AppTheme.secondary.opacity(0.2), lineWidth: 1)
                 )
         }
+    }
+
+    private var highlightsURL: URL?
+    {
+        YouTubeHighlights.searchURL(
+            homeTeam: game.homeTeam,
+            awayTeam: game.awayTeam,
+            competition: game.competition,
+            sport: .futebol
+        )
+    }
+
+    private var shouldShowHighlightsButton: Bool
+    {
+        YouTubeHighlights.isLikelyFinished(date: game.date, sport: .futebol)
     }
     
     private var accessibilityLabel: String
