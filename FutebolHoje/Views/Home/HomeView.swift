@@ -43,6 +43,9 @@ struct HomeView: View
                     
                 case .notifications:
                     NotificationsView()
+                
+                case .favoriteTeams:
+                    FavoriteTeamsView()
                     
                 case .feedback:
                     FeedbackView()
