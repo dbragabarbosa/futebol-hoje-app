@@ -1,5 +1,5 @@
 //
-//  NotificationsHeaderView.swift
+//  FavoriteTeamsHeaderView.swift
 //  FutebolHoje
 //
 //  Created by Daniel Braga Barbosa on 09/02/26.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct NotificationsHeaderView: View
+struct FavoriteTeamsHeaderView: View
 {
     var body: some View
     {
@@ -22,7 +22,7 @@ struct NotificationsHeaderView: View
                     .font(.system(.headline, design: .rounded))
                     .fontWeight(.bold)
                 
-                Text("Receba notificações avisando onde os jogos serão transmitidos")
+                Text("Receba notificações avisando quando e onde os jogos serão transmitidos")
                     .font(.system(.body, design: .rounded))
                     .foregroundColor(.secondary)
             }
@@ -36,5 +36,5 @@ struct NotificationsHeaderView: View
 
 #Preview
 {
-    NotificationsHeaderView()
+    FavoriteTeamsHeaderView()
 }

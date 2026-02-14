@@ -1,5 +1,5 @@
 //
-//  NotificationService.swift
+//  FavoriteTeamsNotificationService.swift
 //  FutebolHoje
 //
 //  Created by Daniel Braga Barbosa on 01/02/26.
@@ -8,7 +8,7 @@
 import Foundation
 import UserNotifications
 
-protocol NotificationService
+protocol FavoriteTeamsNotificationService
 {
     func requestAuthorization() async -> Bool
     

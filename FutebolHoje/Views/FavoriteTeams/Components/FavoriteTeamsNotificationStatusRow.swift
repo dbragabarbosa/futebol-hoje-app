@@ -1,5 +1,5 @@
 //
-//  NotificationStatusRow.swift
+//  FavoriteTeamsNotificationStatusRow.swift
 //  FutebolHoje
 //
 //  Created by Daniel Braga Barbosa on 09/02/26.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct NotificationStatusRow: View
+struct FavoriteTeamsNotificationStatusRow: View
 {
     let onActivateTapped: () -> Void
     
@@ -44,5 +44,5 @@ struct NotificationStatusRow: View
 
 #Preview
 {
-    NotificationStatusRow(onActivateTapped: {})
+    FavoriteTeamsNotificationStatusRow(onActivateTapped: {})
 }

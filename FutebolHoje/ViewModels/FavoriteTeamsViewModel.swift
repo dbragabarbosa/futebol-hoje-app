@@ -1,5 +1,5 @@
 //
-//  NotificationsViewModel.swift
+//  FavoriteTeamsViewModel.swift
 //  FutebolHoje
 //
 //  Created by Daniel Braga Barbosa on 01/02/26.
@@ -18,7 +18,7 @@ enum NotificationPermissionStatus
 }
 
 @MainActor
-final class NotificationsViewModel: ObservableObject
+final class FavoriteTeamsViewModel: ObservableObject
 {
     @Published var selectedTeam: BrazilianTeam?
     @Published var notificationPermissionGranted: Bool = false
@@ -27,7 +27,7 @@ final class NotificationsViewModel: ObservableObject
     
     private var permissionStatus: NotificationPermissionStatus = .notDetermined
     private let favoriteTeamManager: FavoriteTeamManager
-    private let notificationService: NotificationService
+    private let notificationService: FavoriteTeamsNotificationService
     private let analytics: AnalyticsService
     private let db = Firestore.firestore()
     
@@ -39,7 +39,7 @@ final class NotificationsViewModel: ObservableObject
     }
 
     init(favoriteTeamManager: FavoriteTeamManager = FavoriteTeamManager(),
-         notificationService: NotificationService = LocalNotificationService.shared,
+         notificationService: FavoriteTeamsNotificationService = FavoriteTeamsLocalNotificationService.shared,
          analytics: AnalyticsService = FirebaseAnalyticsService.shared)
     {
         self.favoriteTeamManager = favoriteTeamManager

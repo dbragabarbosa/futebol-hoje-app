@@ -1,5 +1,5 @@
 //
-//  TeamListView.swift
+//  FavoriteTeamsListView.swift
 //  FutebolHoje
 //
 //  Created by Daniel Braga Barbosa on 09/02/26.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct NotificationsTeamListView: View
+struct FavoriteTeamsListView: View
 {
     @Binding var selectedTeam: BrazilianTeam?
     let onTeamSelected: (BrazilianTeam) -> Void
@@ -90,7 +90,7 @@ fileprivate struct TeamCard: View
 {
     ScrollView
     {
-        NotificationsTeamListView(
+        FavoriteTeamsListView(
             selectedTeam: .constant(.atleticoMineiro),
             onTeamSelected: { _ in }
         )

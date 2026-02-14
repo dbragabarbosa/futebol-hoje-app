@@ -1,5 +1,5 @@
 //
-//  LocalNotificationService.swift
+//  FavoriteTeamsLocalNotificationService.swift
 //  FutebolHoje
 //
 //  Created by Daniel Braga Barbosa on 01/02/26.
@@ -8,9 +8,9 @@
 import Foundation
 import UserNotifications
 
-final class LocalNotificationService: NotificationService
+final class FavoriteTeamsLocalNotificationService: FavoriteTeamsNotificationService
 {
-    static let shared = LocalNotificationService()
+    static let shared = FavoriteTeamsLocalNotificationService()
     
     private let notificationCenter = UNUserNotificationCenter.current()
     private let analytics: AnalyticsService
