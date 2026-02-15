@@ -34,4 +34,5 @@ struct NBAView: View
 #Preview
 {
     NBAView(isSearchBarFocused: .constant(false))
+        .environmentObject(GameNotificationsViewModel())
 }

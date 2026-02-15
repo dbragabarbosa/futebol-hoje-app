@@ -20,7 +20,7 @@ struct FavoriteTeamsView: View
             
             if !viewModel.notificationPermissionGranted
             {
-                FavoriteTeamsNotificationStatusRow(onActivateTapped: {
+                NotificationPermissionStatusRow(onActivateTapped: {
                     Task
                     {
                         await viewModel.requestNotificationPermission()

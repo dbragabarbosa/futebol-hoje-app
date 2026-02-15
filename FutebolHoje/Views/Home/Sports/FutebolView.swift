@@ -86,4 +86,5 @@ struct FutebolView: View
 #Preview
 {
     FutebolView(isSearchBarFocused: .constant(false))
+        .environmentObject(GameNotificationsViewModel())
 }

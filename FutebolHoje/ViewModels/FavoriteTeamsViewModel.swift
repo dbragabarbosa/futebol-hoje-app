@@ -10,13 +10,6 @@ import Combine
 import FirebaseFirestore
 import UserNotifications
 
-enum NotificationPermissionStatus
-{
-    case notDetermined
-    case authorized
-    case denied
-}
-
 @MainActor
 final class FavoriteTeamsViewModel: ObservableObject
 {

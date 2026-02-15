@@ -39,6 +39,7 @@ struct FutebolHojeApp: App
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     
     @StateObject private var themeManager = ThemeManager()
+    @StateObject private var notificationsViewModel = GameNotificationsViewModel()
     
     var body: some Scene
     {
@@ -51,6 +52,7 @@ struct FutebolHojeApp: App
             }
             .navigationViewStyle(.stack)
             .environmentObject(themeManager)
+            .environmentObject(notificationsViewModel)
             .preferredColorScheme(themeManager.colorScheme)
         }
     }

@@ -11,10 +11,12 @@ import SwiftUI
 struct GameCardView: View
 {
     let game: Game
+    @EnvironmentObject private var notificationsViewModel: GameNotificationsViewModel
+    private let sport: GameNotificationSport = .futebol
     
     var body: some View
     {
-        VStack(alignment: .center, spacing: 10)
+        VStack(alignment: .center, spacing: 8)
         {
             ZStack
             {
@@ -25,12 +27,24 @@ struct GameCardView: View
                     .tracking(1)
                     .multilineTextAlignment(.center)
                     .frame(maxWidth: .infinity)
+                    .padding(.horizontal, 12)
 
-                if shouldShowHighlightsButton, let url = highlightsURL
+                HStack()
                 {
-                    HStack
+                    GameNotificationToggleButton(
+                        isActive: notificationsViewModel.isNotified(game: game, sport: sport),
+                        action: {
+                            notificationsViewModel.toggleNotification(for: game, sport: sport)
+                        }
+                    )
+                    .disabled(!canNotify)
+                    .opacity(canNotify ? 1 : 0.4)
+//                    .padding(1)
+                    
+                    Spacer()
+                    
+                    if shouldShowHighlightsButton, let url = highlightsURL
                     {
-                        Spacer()
                         HighlightsLinkView(url: url)
                     }
                 }
@@ -171,6 +185,11 @@ struct GameCardView: View
         
         return "\(competition). \(home) contra \(away)\(timeString)"
     }
+    
+    private var canNotify: Bool
+    {
+        game.date != nil
+    }
 }
 
 #Preview
@@ -205,4 +224,5 @@ struct GameCardView: View
     }
     .padding()
     .background(Color(.systemGroupedBackground))
+    .environmentObject(GameNotificationsViewModel())
 }

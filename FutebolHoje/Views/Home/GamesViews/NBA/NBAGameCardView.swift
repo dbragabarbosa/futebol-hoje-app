@@ -11,11 +11,27 @@ import SwiftUI
 struct NBAGameCardView: View
 {
     let game: Game
+//    @EnvironmentObject private var notificationsViewModel: GameNotificationsViewModel
+//    private let sport: GameNotificationSport = .nba
     
     var body: some View
     {
         VStack(alignment: .center, spacing: 14)
         {
+//            HStack
+//            {
+//                GameNotificationToggleButton(
+//                    isActive: notificationsViewModel.isNotified(game: game, sport: sport),
+//                    action: {
+//                        notificationsViewModel.toggleNotification(for: game, sport: sport)
+//                    }
+//                )
+//                .disabled(!canNotify)
+//                .opacity(canNotify ? 1 : 0.4)
+//                
+//                Spacer()
+//            }
+            
             HStack(spacing: 0)
             {
                 Text(game.homeTeam ?? "Time A")
@@ -121,6 +137,11 @@ struct NBAGameCardView: View
         
         return "\(home) contra \(away)\(timeString)"
     }
+    
+    private var canNotify: Bool
+    {
+        game.date != nil
+    }
 }
 
 #Preview
@@ -155,4 +176,5 @@ struct NBAGameCardView: View
     }
     .padding()
     .background(Color(.systemGroupedBackground))
+    .environmentObject(GameNotificationsViewModel())
 }

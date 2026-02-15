@@ -86,4 +86,5 @@ struct HomeView: View
 #Preview
 {
     HomeView()
+        .environmentObject(GameNotificationsViewModel())
 }
