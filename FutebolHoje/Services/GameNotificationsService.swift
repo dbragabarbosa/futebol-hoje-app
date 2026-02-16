@@ -10,6 +10,6 @@ import Foundation
 protocol GameNotificationsService
 {
     func requestAuthorization() async -> Bool
-    func scheduleNotification(for game: NotifiedGame) async
+    func scheduleNotification(for game: NotifiedGame, triggerDate: Date, identifier: String, timingOption: NotificationTimingOption) async
     func cancelNotifications(ids: [String])
 }

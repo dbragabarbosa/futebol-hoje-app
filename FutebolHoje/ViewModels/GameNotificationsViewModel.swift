@@ -18,19 +18,24 @@ final class GameNotificationsViewModel: ObservableObject
     @Published var notificationPermissionGranted: Bool = false
     @Published private(set) var permissionStatus: NotificationPermissionStatus = .notDetermined
     @Published var isOnboardingPresented: Bool = false
+    @Published private(set) var selectedTimingOptions: [NotificationTimingOption] = []
     
     @AppStorage("hasSeenNotificationOnboarding") private var hasSeenNotificationOnboarding: Bool = false
     private var cancellables = Set<AnyCancellable>()
     
     private let store: GameNotificationsStore
+    private let timingStore: NotificationTimingStore
     private let notificationService: GameNotificationsService
     init(store: GameNotificationsStore,
+         timingStore: NotificationTimingStore,
          notificationService: GameNotificationsService)
     {
         self.store = store
+        self.timingStore = timingStore
         self.notificationService = notificationService
         
         bindStore()
+        bindTimingStore()
         cleanupExpiredGames()
         setupDayChangeListener()
         setupForegroundListener()
@@ -41,6 +46,7 @@ final class GameNotificationsViewModel: ObservableObject
     {
         self.init(
             store: GameNotificationsStore(),
+            timingStore: NotificationTimingStore(),
             notificationService: GameNotificationsLocalService.shared
         )
     }
@@ -54,7 +60,7 @@ final class GameNotificationsViewModel: ObservableObject
         {
             if let removed = store.remove(id: identifier)
             {
-                notificationService.cancelNotifications(ids: [removed.id])
+                cancelNotifications(for: removed.id)
             }
             return
         }
@@ -62,7 +68,7 @@ final class GameNotificationsViewModel: ObservableObject
         store.upsert(notifiedGame)
         Task
         {
-            await scheduleNotificationIfAllowed(for: notifiedGame)
+            await scheduleNotificationsIfAllowed(for: notifiedGame)
         }
     }
     
@@ -150,6 +156,22 @@ final class GameNotificationsViewModel: ObservableObject
             .assign(to: &$games)
     }
     
+    private func bindTimingStore()
+    {
+        timingStore.$selectedOptions
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] options in
+                guard let self = self else { return }
+                self.selectedTimingOptions = options.sorted { $0.sortOrder < $1.sortOrder }
+                
+                Task
+                {
+                    await self.rescheduleNotificationsForAllGames()
+                }
+            }
+            .store(in: &cancellables)
+    }
+    
     private func setupDayChangeListener()
     {
         NotificationCenter.default.publisher(for: .NSCalendarDayChanged)
@@ -181,7 +203,7 @@ final class GameNotificationsViewModel: ObservableObject
         }
     }
     
-    private func scheduleNotificationIfAllowed(for game: NotifiedGame) async
+    private func scheduleNotificationsIfAllowed(for game: NotifiedGame) async
     {
         guard notificationPermissionGranted else
         {
@@ -192,7 +214,7 @@ final class GameNotificationsViewModel: ObservableObject
             return
         }
         
-        await notificationService.scheduleNotification(for: game)
+        await scheduleNotifications(for: game)
     }
     
     private func scheduleAllPendingNotifications() async
@@ -201,7 +223,7 @@ final class GameNotificationsViewModel: ObservableObject
         
         for game in games
         {
-            await notificationService.scheduleNotification(for: game)
+            await scheduleNotifications(for: game)
         }
     }
     
@@ -211,7 +233,7 @@ final class GameNotificationsViewModel: ObservableObject
         let expiredIds = expiredGames.map { $0.id }
         if !expiredIds.isEmpty
         {
-            notificationService.cancelNotifications(ids: expiredIds)
+            cancelNotifications(for: expiredIds)
         }
     }
     
@@ -241,5 +263,68 @@ final class GameNotificationsViewModel: ObservableObject
     private func dismissOnboarding()
     {
         isOnboardingPresented = false
+    }
+    
+    func toggleTimingOption(_ option: NotificationTimingOption)
+    {
+        timingStore.toggle(option)
+    }
+    
+    func isTimingSelected(_ option: NotificationTimingOption) -> Bool
+    {
+        timingStore.isSelected(option)
+    }
+    
+    private func rescheduleNotificationsForAllGames() async
+    {
+        guard notificationPermissionGranted else { return }
+        
+        for game in games
+        {
+            await scheduleNotifications(for: game)
+        }
+    }
+    
+    private func scheduleNotifications(for game: NotifiedGame) async
+    {
+        cancelNotifications(for: game.id)
+        
+        guard !selectedTimingOptions.isEmpty else { return }
+        
+        for option in selectedTimingOptions
+        {
+            let triggerDate = game.date.addingTimeInterval(option.offset)
+            if triggerDate <= Date() { continue }
+            let identifier = notificationIdentifier(for: game.id, option: option)
+            await notificationService.scheduleNotification(
+                for: game,
+                triggerDate: triggerDate,
+                identifier: identifier,
+                timingOption: option
+            )
+        }
+    }
+    
+    private func cancelNotifications(for gameId: String)
+    {
+        let ids = NotificationTimingOption.allCases.map { notificationIdentifier(for: gameId, option: $0) }
+        cancelNotifications(for: ids)
+    }
+    
+    private func cancelNotifications(for gameIds: [String])
+    {
+        var ids: [String] = []
+        for gameId in gameIds
+        {
+            ids.append(contentsOf: NotificationTimingOption.allCases.map {
+                notificationIdentifier(for: gameId, option: $0)
+            })
+        }
+        notificationService.cancelNotifications(ids: ids)
+    }
+    
+    private func notificationIdentifier(for gameId: String, option: NotificationTimingOption) -> String
+    {
+        "\(gameId)_\(option.rawValue)"
     }
 }

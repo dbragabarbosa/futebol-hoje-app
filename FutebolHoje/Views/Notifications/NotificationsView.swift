@@ -29,7 +29,7 @@ struct NotificationsView: View
             {
                 LazyVStack(spacing: 12)
                 {
-//                    NotificationTimingCardView()
+                    NotificationTimingCardView()
                     
                     if viewModel.games.isEmpty
                     {

@@ -41,17 +41,17 @@ final class GameNotificationsLocalService: GameNotificationsService
         }
     }
     
-    func scheduleNotification(for game: NotifiedGame) async
+    func scheduleNotification(for game: NotifiedGame, triggerDate: Date, identifier: String, timingOption: NotificationTimingOption) async
     {
-        guard game.date > Date() else
+        guard triggerDate > Date() else
         {
-            print("⚠️ Jogo já passou, não agendando notificação")
+            print("⚠️ Horário de notificação já passou, não agendando")
             return
         }
         
-        let content = createNotificationContent(for: game)
-        let trigger = createTrigger(for: game.date)
-        let identifier = notificationIdentifier(for: game.id)
+        let content = createNotificationContent(for: game, timingOption: timingOption)
+        let trigger = createTrigger(for: triggerDate)
+        let identifier = notificationIdentifier(for: identifier)
         
         let request = UNNotificationRequest(
             identifier: identifier,
@@ -62,7 +62,7 @@ final class GameNotificationsLocalService: GameNotificationsService
         do
         {
             try await notificationCenter.add(request)
-            print("✅ Notificação agendada para: \(game.date)")
+            print("✅ Notificação agendada para: \(triggerDate)")
         }
         catch
         {
@@ -80,11 +80,11 @@ final class GameNotificationsLocalService: GameNotificationsService
         notificationCenter.removePendingNotificationRequests(withIdentifiers: identifiers)
     }
     
-    private func createNotificationContent(for game: NotifiedGame) -> UNMutableNotificationContent
+    private func createNotificationContent(for game: NotifiedGame, timingOption: NotificationTimingOption) -> UNMutableNotificationContent
     {
         let content = UNMutableNotificationContent()
         
-        content.title = "\(game.sport.icon) Jogo começando agora"
+        content.title = "\(game.sport.icon) \(timingOption.notificationTitle)"
         content.body = formatNotificationBody(for: game)
         content.sound = .default
         
