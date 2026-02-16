@@ -101,9 +101,9 @@ struct HomeView: View
     {
         NotificationOnboardingConfig(
             title: "Receba alertas dos\nseus jogos salvos",
-            content: "Ative as notificações para ser lembrado dos jogos que você marcou",
+            content: "Ative as notificações para ser lembrado do horário e locais de transmissão dos jogos que quiser",
             notificationTitle: "Jogo começando agora",
-            notificationContent: "Atlético x Cruzeiro\nAssista em: SporTV e Premiere",
+            notificationContent: "Atlético x Cruzeiro às 21:30\nAssista em: SporTV e Premiere",
             primaryButtonTitle: "Ativar notificações",
             secondaryButtonTitle: "Agora não"
         )
@@ -111,12 +111,7 @@ struct HomeView: View
     
     private var notificationOnboardingLogo: some View
     {
-        Image(systemName: "bell.badge.fill")
-            .font(.title2)
-            .foregroundStyle(Color.white)
-            .frame(width: 42, height: 42)
-            .background(Color.AppTheme.primary, in: .rect(cornerRadius: 12))
-            .shadow(color: Color.black.opacity(0.2), radius: 6, x: 0, y: 4)
+        AppNotificationLogoView()
     }
 }
 

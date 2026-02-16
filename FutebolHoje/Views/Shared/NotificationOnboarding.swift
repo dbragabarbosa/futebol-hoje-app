@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIKit
 
 struct NotificationOnboardingConfig
 {
@@ -17,6 +18,46 @@ struct NotificationOnboardingConfig
 
     var primaryButtonTitle: String
     var secondaryButtonTitle: String
+}
+
+struct AppNotificationLogoView: View
+{
+    private var appIcon: UIImage?
+    {
+        guard
+            let info = Bundle.main.infoDictionary,
+            let icons = info["CFBundleIcons"] as? [String: Any],
+            let primary = icons["CFBundlePrimaryIcon"] as? [String: Any],
+            let files = primary["CFBundleIconFiles"] as? [String],
+            let last = files.last,
+            let image = UIImage(named: last)
+        else {
+            return nil
+        }
+        return image
+    }
+    
+    var body: some View
+    {
+        if let icon = appIcon
+        {
+            Image(uiImage: icon)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 36, height: 36)
+                .clipShape(.rect(cornerRadius: 10))
+                .shadow(color: Color.black.opacity(0.12), radius: 3, x: 0, y: 2)
+        }
+        else
+        {
+            Image(systemName: "bell.fill")
+                .font(.system(size: 18, weight: .semibold))
+                .foregroundStyle(Color.white)
+                .frame(width: 36, height: 36)
+                .background(Color.AppTheme.primary, in: .rect(cornerRadius: 10))
+                .shadow(color: Color.black.opacity(0.12), radius: 3, x: 0, y: 2)
+        }
+    }
 }
 
 struct NotificationOnboarding<NotificationLogo: View>: View
@@ -64,13 +105,14 @@ struct NotificationOnboarding<NotificationLogo: View>: View
                 VStack(spacing: 20)
                 {
                     Text(config.title)
-                        .font(.largeTitle.bold())
+                        .font(.system(.largeTitle, design: .rounded))
+                        .fontWeight(.bold)
                         .multilineTextAlignment(.center)
                         .lineLimit(2)
                         .fixedSize(horizontal: false, vertical: true)
                     
                     Text(config.content)
-                        .font(.callout)
+                        .font(.system(.callout, design: .rounded))
                         .foregroundStyle(.gray)
                         .multilineTextAlignment(.center)
                         .lineLimit(3)
@@ -85,11 +127,15 @@ struct NotificationOnboarding<NotificationLogo: View>: View
                     label:
                     {
                         Text(primaryButtonTitle)
-                            .fontWeight(.medium)
+                            .font(.system(.headline, design: .rounded))
+                            .fontWeight(.semibold)
                             .frame(maxWidth: .infinity)
-                            .foregroundStyle(foregroundColor)
-                            .frame(height: 55)
-                            .background(backgroundColor, in: .rect(cornerRadius: 20))
+                            .foregroundStyle(Color.white)
+                            .frame(height: 56)
+//                            .background(backgroundColor, in: .rect(cornerRadius: 20))
+//                            .background(accentGradient, in: .rect(cornerRadius: 18))
+                            .background(Color.AppTheme.secondary.opacity(0.95), in: .rect(cornerRadius: 30))
+                            .shadow(color: Color.black.opacity(colorScheme == .dark ? 0.22 : 0.28), radius: 10, x: 0, y: 6)
                     }
 //                    .geometryGroup() iOS17 +
 //                    .drawingGroup()?
@@ -104,8 +150,9 @@ struct NotificationOnboarding<NotificationLogo: View>: View
                         label:
                         {
                             Text(config.secondaryButtonTitle)
+                                .font(.system(.callout, design: .rounded))
                                 .fontWeight(.semibold)
-                                .foregroundStyle(foregroundColor)
+                                .foregroundStyle(Color.secondary)
                         }
                     }
                 }
@@ -313,6 +360,15 @@ struct NotificationOnboarding<NotificationLogo: View>: View
     {
         colorScheme != .dark ? .white : .black
     }
+    
+    private var accentGradient: LinearGradient
+    {
+        LinearGradient(
+            colors: [Color.AppTheme.primary, Color.AppTheme.secondary],
+            startPoint: .topLeading,
+            endPoint: .bottomTrailing
+        )
+    }
 }
 
 struct ContentViewForNotificationOnboardingTest: View
@@ -330,13 +386,7 @@ struct ContentViewForNotificationOnboardingTest: View
         
         NotificationOnboarding(config: config, permissionStatus: .notDetermined)
         {
-            Image(systemName: "applelogo")
-                .font(.title2)
-                .foregroundStyle(.background)
-                .frame(width: 40, height: 40)
-                .background(.primary)
-                .clipShape(.rect(cornerRadius: 12))
-            
+            AppNotificationLogoView()
         } onPrimaryButtonTap: {
             print("Primary Button Tapped!")
         } onSecondaryButtonTap: {

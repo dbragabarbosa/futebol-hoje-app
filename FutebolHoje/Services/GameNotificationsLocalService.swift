@@ -95,10 +95,10 @@ final class GameNotificationsLocalService: GameNotificationsService
     {
         var body = "\(game.homeTeam) x \(game.awayTeam)"
         
-        if let competition = game.competition, !competition.isEmpty
-        {
-            body += "\n\(competition)"
-        }
+//        if let competition = game.competition, !competition.isEmpty
+//        {
+//            body += "\n\(competition)"
+//        }
         
         if let broadcasters = game.broadcasters, !broadcasters.isEmpty
         {
