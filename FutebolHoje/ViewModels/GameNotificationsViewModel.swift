@@ -9,14 +9,17 @@ import Foundation
 import Combine
 import UserNotifications
 import UIKit
+import SwiftUI
 
 @MainActor
 final class GameNotificationsViewModel: ObservableObject
 {
     @Published private(set) var games: [NotifiedGame] = []
     @Published var notificationPermissionGranted: Bool = false
+    @Published private(set) var permissionStatus: NotificationPermissionStatus = .notDetermined
+    @Published var isOnboardingPresented: Bool = false
     
-    private var permissionStatus: NotificationPermissionStatus = .notDetermined
+    @AppStorage("hasSeenNotificationOnboarding") private var hasSeenNotificationOnboarding: Bool = false
     private var cancellables = Set<AnyCancellable>()
     
     private let store: GameNotificationsStore
@@ -85,6 +88,41 @@ final class GameNotificationsViewModel: ObservableObject
         }
     }
     
+    func handlePermissionCTA()
+    {
+        switch permissionStatus
+        {
+            case .notDetermined:
+                presentOnboardingIfNeeded()
+            case .denied:
+                openSettings()
+            case .authorized:
+                break
+        }
+    }
+    
+    func handleOnboardingPrimaryAction()
+    {
+        switch permissionStatus
+        {
+            case .authorized:
+                dismissOnboarding()
+            case .denied:
+                openSettings()
+            case .notDetermined:
+                Task
+                {
+                    await requestNotificationPermission()
+                }
+        }
+    }
+    
+    func handleOnboardingSecondaryAction()
+    {
+        hasSeenNotificationOnboarding = true
+        dismissOnboarding()
+    }
+    
     func checkNotificationPermission()
     {
         cleanupExpiredGames()
@@ -136,30 +174,25 @@ final class GameNotificationsViewModel: ObservableObject
     {
         permissionStatus = status
         notificationPermissionGranted = status == .authorized
+        
+        if status != .notDetermined
+        {
+            isOnboardingPresented = false
+        }
     }
     
     private func scheduleNotificationIfAllowed(for game: NotifiedGame) async
     {
-        let canSchedule = await ensureAuthorizationIfNeeded()
-        guard canSchedule else { return }
+        guard notificationPermissionGranted else
+        {
+            if permissionStatus == .notDetermined
+            {
+                presentOnboardingIfNeeded()
+            }
+            return
+        }
+        
         await notificationService.scheduleNotification(for: game)
-    }
-    
-    private func ensureAuthorizationIfNeeded() async -> Bool
-    {
-        if notificationPermissionGranted
-        {
-            return true
-        }
-        
-        if permissionStatus == .notDetermined
-        {
-            let granted = await notificationService.requestAuthorization()
-            setPermissionStatus(granted ? .authorized : .denied)
-            return granted
-        }
-        
-        return false
     }
     
     private func scheduleAllPendingNotifications() async
@@ -186,5 +219,27 @@ final class GameNotificationsViewModel: ObservableObject
     {
         guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
         UIApplication.shared.open(url)
+    }
+    
+    private func presentOnboardingIfNeeded()
+    {
+        guard permissionStatus == .notDetermined else { return }
+        
+        if hasSeenNotificationOnboarding
+        {
+            Task
+            {
+                await requestNotificationPermission()
+            }
+            return
+        }
+        
+        hasSeenNotificationOnboarding = true
+        isOnboardingPresented = true
+    }
+    
+    private func dismissOnboarding()
+    {
+        isOnboardingPresented = false
     }
 }

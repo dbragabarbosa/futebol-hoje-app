@@ -122,7 +122,7 @@ final class FavoriteTeamsLocalNotificationService: FavoriteTeamsNotificationServ
         if let broadcasters = broadcasters, !broadcasters.isEmpty
         {
             let broadcastersText = broadcasters.joined(separator: ", ")
-            body += "\n📺 Assista: \(broadcastersText)"
+            body += "\n📺 Assista em: \(broadcastersText)"
         }
         
         return body

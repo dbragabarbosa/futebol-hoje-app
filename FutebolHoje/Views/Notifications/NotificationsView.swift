@@ -21,10 +21,7 @@ struct NotificationsView: View
             if !viewModel.notificationPermissionGranted
             {
                 NotificationPermissionStatusRow(onActivateTapped: {
-                    Task
-                    {
-                        await viewModel.requestNotificationPermission()
-                    }
+                    viewModel.handlePermissionCTA()
                 })
             }
             

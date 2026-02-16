@@ -6,16 +6,15 @@
 //
 
 import SwiftUI
-import UserNotifications
 
 struct NotificationOnboardingConfig
 {
     var title: String
     var content: String
-    // Notification Properties
+
     var notificationTitle: String
     var notificationContent: String
-    // Other Properties
+
     var primaryButtonTitle: String
     var secondaryButtonTitle: String
 }
@@ -23,20 +22,20 @@ struct NotificationOnboardingConfig
 struct NotificationOnboarding<NotificationLogo: View>: View
 {
     var config: NotificationOnboardingConfig
+    var permissionStatus: NotificationPermissionStatus
+    
     @ViewBuilder var notificationLogo: NotificationLogo
-    var onPermissionChange: (_ isApproved: Bool) -> ()
+    
     var onPrimaryButtonTap: () -> ()
     var onSecondaryButtonTap: () -> ()
-//    var onFinish: () -> ()
     
-    // View Properties
     @State private var animateNotification: Bool = false
     @State private var loopContinues: Bool = true
     @State private var askPermission: Bool = false
     @State private var showArrow: Bool = false
-    @State private var authorization: UNAuthorizationStatus = .notDetermined
+    
     @Environment(\.colorScheme) private var colorScheme
-    @Environment(\.openURL) private var openURL
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     
     var body: some View
     {
@@ -49,18 +48,14 @@ struct NotificationOnboarding<NotificationLogo: View>: View
                     .ignoresSafeArea()
                     .blurOpacity(askPermission)
                 
-                // Allow Button Pointing Arrow
                 Image(systemName: "arrow.up")
                     .font(.system(size: 80, weight: .bold))
                     .foregroundStyle(foregroundColor)
-                    // Using Offset to adjust the arrow to point the allow button
-                    // iOS 26 have slightly different offset, since its having larger button padding
                     .offset(x: isiOS26 ? 75 : 70, y: 150)
                     .blurOpacity(showArrow)
             }
             .allowsHitTesting(false)
             
-            // Animated Mobile Like Notification UI
             VStack(spacing: 0)
             {
                 iPhonePreview()
@@ -83,40 +78,24 @@ struct NotificationOnboarding<NotificationLogo: View>: View
                     
                     Spacer(minLength: 0)
                     
-                    // Primary & Secondary Buttons
                     Button
                     {
-                        if authorization == .authorized
-                        {
-                            onPrimaryButtonTap()
-                        }
-                        else if authorization == .denied
-                        {
-                            // Visit Settings
-                            if let settingsURL = URL(string: UIApplication.openNotificationSettingsURLString)
-                            {
-                                openURL(settingsURL)
-                            }
-                        }
-                        else
-                        {
-                            askNotificationPermssion()
-                        }
+                        handlePrimaryButtonTap()
                     }
                     label:
                     {
-                        Text(authorization == .authorized ? "You're All Set!" : authorization == .denied ? "Go to Settings" : config.primaryButtonTitle)
+                        Text(primaryButtonTitle)
                             .fontWeight(.medium)
                             .frame(maxWidth: .infinity)
                             .foregroundStyle(foregroundColor)
                             .frame(height: 55)
                             .background(backgroundColor, in: .rect(cornerRadius: 20))
                     }
-//                    .geometryGroup()    SÓ iOS17 +
-//                    .drawingGroup()    ???? Devo usar no lugar?
-//                    .compositingGroup()   ???? Devo usar no lugar?
+//                    .geometryGroup() iOS17 +
+//                    .drawingGroup()?
+//                    .compositingGroup() ?
                     
-                    if authorization == .notDetermined
+                    if permissionStatus == .notDetermined
                     {
                         Button
                         {
@@ -126,7 +105,7 @@ struct NotificationOnboarding<NotificationLogo: View>: View
                         {
                             Text(config.secondaryButtonTitle)
                                 .fontWeight(.semibold)
-                                .foregroundStyle(backgroundColor)
+                                .foregroundStyle(foregroundColor)
                         }
                     }
                 }
@@ -135,21 +114,16 @@ struct NotificationOnboarding<NotificationLogo: View>: View
             }
             .blurOpacity(!askPermission)
         }
-        // To cut off the inifinite loop
         .onDisappear { loopContinues = false }
-        .task {
-            let settings = await UNUserNotificationCenter.current().notificationSettings()
-            let authorization = settings.authorizationStatus
-            self.authorization = authorization
-            
-            if authorization == .authorized
+        .onChange(of: permissionStatus)
+        { newValue in
+            if newValue != .notDetermined
             {
-                onPermissionChange(true)
-            }
-            
-            if authorization == .denied
-            {
-                onPermissionChange(false)
+                withAnimation(.smooth(duration: 0.3, extraBounce: 0))
+                {
+                    askPermission = false
+                    showArrow = false
+                }
             }
         }
     }
@@ -159,10 +133,7 @@ struct NotificationOnboarding<NotificationLogo: View>: View
     {
         GeometryReader
         {
-//        { _ in
             let size = $0.size
-            // Scaling to fit the Preview for smaller devices
-            // We can increase the value 340 to more to have more scaling
             let scale = min(size.height / 340, 1)
             let width: CGFloat = 320
             let cornerRadius: CGFloat = 30
@@ -175,7 +146,6 @@ struct NotificationOnboarding<NotificationLogo: View>: View
                 RoundedRectangle(cornerRadius: cornerRadius)
                     .stroke(.gray.opacity(0.5), lineWidth: 1.5)
                 
-                // Mock Widgets & Apps
                 VStack(spacing: 15)
                 {
                     HStack(spacing: 15)
@@ -200,7 +170,6 @@ struct NotificationOnboarding<NotificationLogo: View>: View
                 .padding(.top, 20)
                 .foregroundStyle(backgroundColor.opacity(0.1))
                 
-                // Status Bar
                 HStack(spacing: 4)
                 {
                     Text("9:41")
@@ -218,18 +187,15 @@ struct NotificationOnboarding<NotificationLogo: View>: View
                 .padding(.horizontal, 20)
                 .padding(.top, 15)
                 
-                // Notification View
                 NotificationView()
             }
             .frame(width: width)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-            // Gradient Mask
             .mask {
                 LinearGradient(
                     stops: [.init(color: .white, location: 0), .init(color: .clear, location: 0.9)],
                     startPoint: .top,
                     endPoint: .bottom)
-                // For the visibility of the border
                 .padding(-1)
             }
             .scaleEffect(scale, anchor: .top)
@@ -254,7 +220,7 @@ struct NotificationOnboarding<NotificationLogo: View>: View
                     
                     Spacer(minLength: 0)
                     
-                    Text("Now")
+                    Text("Agora")
                         .font(.caption2)
                         .fontWeight(.medium)
                         .foregroundStyle(.gray)
@@ -282,6 +248,7 @@ struct NotificationOnboarding<NotificationLogo: View>: View
     
     private func loopAnimation() async
     {
+        guard !reduceMotion else { return }
         try? await Task.sleep(for: .seconds(0.5))
         
         withAnimation(.smooth(duration: 1))
@@ -301,35 +268,39 @@ struct NotificationOnboarding<NotificationLogo: View>: View
         await loopAnimation()
     }
     
-    private func askNotificationPermssion()
+    private func handlePrimaryButtonTap()
     {
-        Task
-        { @MainActor in
-            
+        if permissionStatus == .notDetermined
+        {
             withAnimation(.smooth(duration: 0.3, extraBounce: 0))
             {
                 askPermission = true
             }
             
-            try? await Task.sleep(for: .seconds(0.3))
-            
-            withAnimation(.smooth(duration: 0.3, extraBounce: 0))
+            Task
             {
-                showArrow = true
+                try? await Task.sleep(for: .seconds(0.3))
+                
+                withAnimation(.smooth(duration: 0.3, extraBounce: 0))
+                {
+                    showArrow = true
+                }
             }
-            
-            // Asking Notification Permission
-            let status = (try? await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound])) ?? false
-            let authorization = await UNUserNotificationCenter.current().notificationSettings().authorizationStatus
-            onPermissionChange(status)
-            
-            // Removing dark background and arrow view
-            withAnimation(.smooth(duration: 0.3, extraBounce: 0))
-            {
-                askPermission = false
-                showArrow = false
-                self.authorization = authorization
-            }
+        }
+        
+        onPrimaryButtonTap()
+    }
+    
+    private var primaryButtonTitle: String
+    {
+        switch permissionStatus
+        {
+            case .authorized:
+                return "Tudo pronto"
+            case .denied:
+                return "Ir para Ajustes"
+            case .notDetermined:
+                return config.primaryButtonTitle
         }
     }
     
@@ -349,17 +320,16 @@ struct ContentViewForNotificationOnboardingTest: View
     var body: some View
     {
         let config = NotificationOnboardingConfig(
-            title: "Stay Connected with\nPush Notifications",
-            content: "We will send you push notifications to keep you updated on the latest news and updates.",
-            notificationTitle: "Hello there!",
-            notificationContent: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-            primaryButtonTitle: "Continue",
-            secondaryButtonTitle: "Ask later"
+            title: "Receba alertas dos\nseus jogos salvos",
+            content: "Ative as notificações para lembrar dos jogos que você marcou no app.",
+            notificationTitle: "Jogo começando agora",
+            notificationContent: "Flamengo x Palmeiras • Premiere",
+            primaryButtonTitle: "Ativar notificações",
+            secondaryButtonTitle: "Agora não"
         )
         
-        NotificationOnboarding(config: config) {
-            
-            // I need to change for my App Logo
+        NotificationOnboarding(config: config, permissionStatus: .notDetermined)
+        {
             Image(systemName: "applelogo")
                 .font(.title2)
                 .foregroundStyle(.background)
@@ -367,8 +337,6 @@ struct ContentViewForNotificationOnboardingTest: View
                 .background(.primary)
                 .clipShape(.rect(cornerRadius: 12))
             
-        } onPermissionChange: { isApproved in
-            print(isApproved)
         } onPrimaryButtonTap: {
             print("Primary Button Tapped!")
         } onSecondaryButtonTap: {

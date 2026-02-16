@@ -14,6 +14,8 @@ struct HomeView: View
     @State private var selectedSport: SportType = .futebol
     @State private var isSearchBarFocused: Bool = false
     
+    @EnvironmentObject private var notificationsViewModel: GameNotificationsViewModel
+    
     private let analytics: AnalyticsService = FirebaseAnalyticsService.shared
     
     var body: some View
@@ -44,8 +46,8 @@ struct HomeView: View
                 case .notifications:
                     NotificationsView()
                 
-                case .favoriteTeams:
-                    FavoriteTeamsView()
+//                case .favoriteTeams:
+//                    FavoriteTeamsView()
                     
                 case .feedback:
                     FeedbackView()
@@ -80,6 +82,41 @@ struct HomeView: View
             isSearchBarFocused = false
         }
 //        .animation(.easeInOut(duration: 0.2), value: isSearchBarFocused)
+        .fullScreenCover(isPresented: $notificationsViewModel.isOnboardingPresented)
+        {
+            NotificationOnboarding(
+                config: notificationOnboardingConfig,
+                permissionStatus: notificationsViewModel.permissionStatus
+            ) {
+                notificationOnboardingLogo
+            } onPrimaryButtonTap: {
+                notificationsViewModel.handleOnboardingPrimaryAction()
+            } onSecondaryButtonTap: {
+                notificationsViewModel.handleOnboardingSecondaryAction()
+            }
+        }
+    }
+    
+    private var notificationOnboardingConfig: NotificationOnboardingConfig
+    {
+        NotificationOnboardingConfig(
+            title: "Receba alertas dos\nseus jogos salvos",
+            content: "Ative as notificações para ser lembrado dos jogos que você marcou",
+            notificationTitle: "Jogo começando agora",
+            notificationContent: "Atlético x Cruzeiro\nAssista em: SporTV e Premiere",
+            primaryButtonTitle: "Ativar notificações",
+            secondaryButtonTitle: "Agora não"
+        )
+    }
+    
+    private var notificationOnboardingLogo: some View
+    {
+        Image(systemName: "bell.badge.fill")
+            .font(.title2)
+            .foregroundStyle(Color.white)
+            .frame(width: 42, height: 42)
+            .background(Color.AppTheme.primary, in: .rect(cornerRadius: 12))
+            .shadow(color: Color.black.opacity(0.2), radius: 6, x: 0, y: 4)
     }
 }
 
