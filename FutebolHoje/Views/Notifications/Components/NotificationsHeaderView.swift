@@ -15,10 +15,11 @@ struct NotificationsHeaderView: View
     {
         HStack(spacing: 16)
         {
-            Image(systemName: "bell.badge.fill")
-                .font(.system(size: 26))
-                .foregroundStyle(Color.AppTheme.primary)
-                .symbolRenderingMode(.hierarchical)
+//            Image(systemName: "bell.badge.fill")
+            Image(systemName: "bell.badge")
+                .font(.system(size: 30))
+//                .foregroundStyle(Color.AppTheme.primary)
+//                .symbolRenderingMode(.hierarchical)
             
             VStack(alignment: .leading, spacing: 4)
             {
@@ -26,8 +27,9 @@ struct NotificationsHeaderView: View
                     .font(.system(.headline, design: .rounded))
                     .fontWeight(.bold)
                 
-                Text("Salve partidas para receber alertas no horário do jogo.")
+                Text("Salve partidas para receber alertas com o horário e transmissão dos jogos.")
                     .font(.system(.body, design: .rounded))
+//                    .fontWeight(.medium)
                     .foregroundColor(.secondary)
                 
                 Text(statusText)

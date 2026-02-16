@@ -36,7 +36,7 @@ struct NotificationsView: View
                         ContentUnavailableView(
                             icon: "bell.slash",
                             title: "Nenhum Jogo Salvo",
-                            message: "Marque partidas na tela de jogos para receber notificações aqui.",
+                            message: "Marque partidas na tela de jogos para ver a lista dos selecionados aqui.",
                             buttonTitle: nil,
                             action: nil
                         )
