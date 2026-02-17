@@ -47,6 +47,10 @@ struct GameCardView: View
                     {
                         HighlightsLinkView(url: url)
                     }
+                    else
+                    {
+                        ShareGameLinkView(game: game)
+                    }
                 }
             }
             

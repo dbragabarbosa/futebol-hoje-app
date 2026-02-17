@@ -9,7 +9,6 @@ import SwiftUI
 
 struct ShareAppView: View
 {
-    private let appLink = URL(string: "https://apps.apple.com/app/id6755705162")!
     private let analytics: AnalyticsService = FirebaseAnalyticsService.shared
     
     var body: some View
@@ -20,7 +19,7 @@ struct ShareAppView: View
             title: "Compartilhe",
             description: "Ajude a comunidade a crescer compartilhando o aplicativo!"
         ) {
-            ShareLink(item: appLink, message: Text("Confira o melhor app para acompanhar os jogos"))
+            ShareLink(item: AppLinks.appStore, message: Text("Confira o melhor app para acompanhar os jogos"))
             {
                 HStack
                 {

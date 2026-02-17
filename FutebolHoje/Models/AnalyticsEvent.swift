@@ -19,6 +19,7 @@ enum AnalyticsEvent
     case screenViewed(screenName: String)
     
     case gameCardTapped(gameId: String)
+    case shareGameTapped(gameId: String?)
     case shareAppTapped
     case rateAppTapped
     case contactDeveloperTapped
@@ -54,6 +55,8 @@ enum AnalyticsEvent
                 return "screen_view"
             case .gameCardTapped:
                 return "game_card_tapped"
+            case .shareGameTapped:
+                return "share_game_tapped"
             case .shareAppTapped:
                 return "share_app_tapped"
             case .rateAppTapped:
@@ -128,6 +131,13 @@ enum AnalyticsEvent
                 
             case .gameCardTapped(let gameId):
                 return ["game_id": gameId]
+
+            case .shareGameTapped(let gameId):
+                if let gameId
+                {
+                    return ["game_id": gameId]
+                }
+                return nil
                 
             case .shareAppTapped, .rateAppTapped, .contactDeveloperTapped:
                 return nil
