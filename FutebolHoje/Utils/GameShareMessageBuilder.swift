@@ -75,7 +75,7 @@ enum GameShareMessageBuilder
         
         lines.append("")
         
-        lines.append("📱 Informações do App Jogos do dia!")
+        lines.append("📱 Informações do app Onde Vai Passar!")
 
         return lines.joined(separator: "\n")
     }

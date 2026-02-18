@@ -38,7 +38,7 @@ class FeedbackViewModel: ObservableObject
     {
         analytics.logEvent(.contactDeveloperTapped)
         
-        let subject = "Contato - Futebol Hoje"
+        let subject = "Contato - Onde Vai Passar"
         let body = "Olá, gostaria de falar sobre ..."
         
         guard let subjectEncoded = subject.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),

@@ -19,7 +19,7 @@ struct ShareAppView: View
             title: "Compartilhe",
             description: "Ajude a comunidade a crescer compartilhando o aplicativo!"
         ) {
-            ShareLink(item: AppLinks.appStore, message: Text("Confira o melhor app para acompanhar os jogos"))
+            ShareLink(item: AppLinks.appStore, message: Text("Confira o Onde Vai Passar para saber onde assistir aos jogos"))
             {
                 HStack
                 {
