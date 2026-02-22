@@ -27,7 +27,7 @@ struct HomeView: View
                 case .home:
                     VStack(spacing: 0)
                     {
-                        SportSelectionHeader(selectedSport: $selectedSport)
+//                        SportSelectionHeader(selectedSport: $selectedSport)
                         
                         switch selectedSport
                         {
